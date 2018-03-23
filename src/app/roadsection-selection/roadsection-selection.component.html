@@ -1,0 +1,42 @@
+<div class="component">
+  <table class="table">
+    <thead>
+    <tr>
+      <th>actief</th>
+      <th>parameter</th>
+      <th>waarde</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td><input type="checkbox"></td>
+      <td>Weg ID:</td>
+      <td *ngIf="roadNumbers">
+        <select class="form-control" [(ngModel)]="roadId">
+          <option class="form-control" *ngFor="let roadNumber of roadNumbers">{{roadNumber}}</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td><input type="checkbox"></td>
+      <td>Rechts:</td>
+      <td><input type="checkbox" [(ngModel)]="right"></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox"></td>
+      <td>Begin KM:</td>
+      <td><input class="form-control" [(ngModel)]="beginKm" type="number"></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox"></td>
+      <td>Eind KM:</td>
+      <td><input class="form-control" [(ngModel)]="endKm" type="number"></td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <button class="btn btn-primary" (click)="getRoad()">select</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

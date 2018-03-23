@@ -1,0 +1,18 @@
+<div *ngIf="roadsections" class="component">
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>wegvak ID</th>
+      <th>Begin KM</th>
+      <th>Eind KM</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let roadsection of roadsections">
+      <td>{{roadsection.id}}</td>
+      <td>{{roadsection.beginKilometer}}</td>
+      <td>{{roadsection.endKilometer}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,57 @@
+<div class="container-fluid">
+  <h1 class="h1">{{title}}</h1>
+  <div class="row ">
+    <div class="col-md-3 column-content">
+      <app-roadsection-selection></app-roadsection-selection>
+      <app-roadsection-list [roadsections]="roadsections"></app-roadsection-list>
+      <button class="btn" (click)="getRoadsections()">Get Roadsections</button>
+      <div *ngIf="geometry">
+        <table class="table table-striped">
+          <tbody>
+          <tr *ngFor="let point of geometry.wgs84MultiLineString">
+            <td>{{point.coordinate.lat}}</td>
+            <td>{{point.coordinate.lng}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-9 column-content">
+      <agm-map [latitude]="map_lat" [longitude]="map_lng" [mapTypeId]="maptype">
+        <agm-marker [latitude]="map_lat" [longitude]="map_lng">
+          <agm-info-window>Hello World!</agm-info-window>
+        </agm-marker>
+        <agm-polyline *ngFor="let roadsection of roadsections" [strokeColor]="roadsection.strokeColor"
+                      (lineMouseOver)="lineMouseOver(roadsection, infoWindow, $event)">
+          <agm-info-window #infoWindow [latitude]="roadsection_infowindow_lat" [longitude]="roadsection_infowindow_lng">
+            {{roadsection.id}}
+          </agm-info-window>
+          <div *ngIf="roadsection.geometry.wgs84MultiLineString">
+            <agm-polyline-point *ngFor="let point of roadsection.geometry.wgs84MultiLineString"
+                                [latitude]="point.coordinate.lat"
+                                [longitude]="point.coordinate.lng">
+            </agm-polyline-point>
+          </div>
+        </agm-polyline>
+      </agm-map>
+      <div class="btn-group">
+        <div class="form-check">
+          <input name="maptype" type="radio" class="with-gap" id="roadmap" [(ngModel)]="maptype" value="roadmap">
+          <label for="roadmap">Road map</label>
+        </div>
+        <div class="form-check">
+          <input name="maptype" type="radio" class="with-gap" id="hybrid" [(ngModel)]="maptype" value="hybrid">
+          <label for="hybrid">Hybrid</label>
+        </div>
+        <div class="form-check">
+          <input name="maptype" type="radio" class="with-gap" id="satellite" [(ngModel)]="maptype" value="satellite">
+          <label for="satellite">Satellite</label>
+        </div>
+        <div class="form-check">
+          <input name="maptype" type="radio" class="with-gap" id="terrain" [(ngModel)]="maptype" value="terrain">
+          <label for="terrain">Terrain</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
