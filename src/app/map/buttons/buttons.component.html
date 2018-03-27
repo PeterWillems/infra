@@ -1,0 +1,22 @@
+<div class="btn-group">
+  <div class="form-check">
+    <input name="maptype" type="radio" class="with-gap" id="roadmap" [(ngModel)]="selectedMaptype" value="roadmap"
+           (change)="onMaptypeChange()">
+    <label for="roadmap">Road map</label>
+  </div>
+  <div class="form-check">
+    <input name="maptype" type="radio" class="with-gap" id="hybrid" [(ngModel)]="selectedMaptype" value="hybrid"
+           (change)="onMaptypeChange()">
+    <label for="hybrid">Hybrid</label>
+  </div>
+  <div class="form-check">
+    <input name="maptype" type="radio" class="with-gap" id="satellite" [(ngModel)]="selectedMaptype" value="satellite"
+           (change)="onMaptypeChange()">
+    <label for="satellite">Satellite</label>
+  </div>
+  <div class="form-check">
+    <input name="maptype" type="radio" class="with-gap" id="terrain" [(ngModel)]="selectedMaptype" value="terrain"
+           (change)="onMaptypeChange()">
+    <label for="terrain">Terrain</label>
+  </div>
+</div>

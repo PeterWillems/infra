@@ -1,0 +1,67 @@
+<div *ngIf="selectedRoadsection">
+  <div class="card border-primary">
+    <div class="card-header">
+      geselecteerd wegvak {{selectedRoadsection.id}}
+    </div>
+    <div class="card-body">
+      <table class="table table-hover table-bordered table-condensed table-sm">
+        <thead class="thead-light">
+        <tr>
+          <th>attribuut</th>
+          <th>waarde</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>id</td>
+          <td>{{selectedRoadsection.id}}</td>
+        </tr>
+        <tr>
+          <td>begin KM</td>
+          <td>{{selectedRoadsection.beginKilometer | kilometry}}</td>
+        </tr>
+        <tr>
+          <td>eind KM</td>
+          <td>{{selectedRoadsection.endKilometer | kilometry}}</td>
+        </tr>
+        <tr>
+          <td>beginafstand</td>
+          <td>{{selectedRoadsection.beginDistance | distance}}</td>
+        </tr>
+        <tr>
+          <td>eindafstand</td>
+          <td>{{selectedRoadsection.endDistance | distance}}</td>
+        </tr>
+        <tr>
+          <td>beginjunctie</td>
+          <td>{{selectedRoadsection.beginJunction | junction}}</td>
+        </tr>
+        <tr>
+          <td>eindjunctie</td>
+          <td>{{selectedRoadsection.endJunction | junction}}</td>
+        </tr>
+        <tr>
+          <td>baan</td>
+          <td>{{selectedRoadsection.drivewaySubtype.drivewaySubtypeCode}}</td>
+        </tr>
+        <tr>
+          <td>baanpositie</td>
+          <td>{{selectedRoadsection.drivewayPosition.drivewayPositionCode}}</td>
+        </tr>
+        <tr>
+          <td>administratieve richting</td>
+          <td>{{selectedRoadsection.administrativeDirection | direction}}</td>
+        </tr>
+        <tr>
+          <td>rijrichting</td>
+          <td>{{selectedRoadsection.drivingDirection | direction}}</td>
+        </tr>
+        <tr>
+          <td>hectoletter</td>
+          <td>{{selectedRoadsection.hectoLetter}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

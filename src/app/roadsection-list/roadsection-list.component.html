@@ -1,18 +1,38 @@
-<div *ngIf="roadsections" class="component">
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th>wegvak ID</th>
-      <th>Begin KM</th>
-      <th>Eind KM</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let roadsection of roadsections">
-      <td>{{roadsection.id}}</td>
-      <td>{{roadsection.beginKilometer}}</td>
-      <td>{{roadsection.endKilometer}}</td>
-    </tr>
-    </tbody>
-  </table>
+<div class="card border-primary">
+  <div class="card-header">
+    geselecteerde wegvakken
+  </div>
+  <div class="card-body">
+    <div *ngIf="roadsections" class="component">
+      <table class="table table-hover table-bordered table-sm">
+        <thead class="thead-light">
+        <tr>
+          <th class="column-header" (click)="sortData('id')">wegvak ID
+            <div [ngClass]="getSortClass('id')"></div>
+          </th>
+          <th class="column-header" (click)="sortData('beginKilometer')">begin KM
+            <div [ngClass]="getSortClass('beginKilometer')"></div>
+          </th>
+          <th class="column-header" (click)="sortData('endKilometer')">eind KM
+            <div [ngClass]="getSortClass('endKilometer')"></div>
+          </th>
+          <th class="column-header" (click)="sortData('drivewaySubtype')">baan subsoort
+            <div [ngClass]="getSortClass('drivewaySubtype')"></div>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="table-record {{roadsection==selectedRoadsection?'table-record-selected':''}}"
+            *ngFor="let roadsection of roadsections" (click)="show(roadsection)">
+          <td>{{roadsection.id}}</td>
+          <td>{{roadsection.beginKilometer}}</td>
+          <td>{{roadsection.endKilometer}}</td>
+          <td>{{roadsection.drivewaySubtype.drivewaySubtypeCode}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <br>
+    <app-selected-roadsection [selectedRoadsection]="selectedRoadsection"></app-selected-roadsection>
+  </div>
 </div>
