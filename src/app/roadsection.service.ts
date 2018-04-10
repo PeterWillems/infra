@@ -3,6 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {GeometryModel} from './models/geometry.model';
 import {RoadsectionModel} from './models/roadsection.model';
+import LatLngBounds = google.maps.LatLngBounds;
+import {DrivewaySubtypeModel} from './models/drivewaySubtype.model';
 
 @Injectable()
 export class RoadsectionService {
@@ -27,7 +29,7 @@ export class RoadsectionService {
     return this._httpClient.get<GeometryModel>(this.apiAddress + '/roadsections/' + roadsectionId + '/geometry');
   }
 
-  getRoadSections(roadId?: string, right?: boolean, beginKm?: number, endKm?: number): void {
+  getRoadSections(roadId?: string, right?: boolean, beginKm?: number, endKm?: number, drivewaySubtype?: string): void {
     console.log('Loading ...');
     this.loading = 'Loading ...';
     this.loadingUpdated.emit(this.loading);
@@ -36,27 +38,13 @@ export class RoadsectionService {
       + ((roadId !== undefined) ? '/roadsections?road=' + roadId : '')
       + ((right !== undefined) ? '&right=' + right : '')
       + ((beginKm !== undefined) ? '&beginKilometer=' + beginKm : '')
-      + ((endKm !== undefined) ? '&endKilometer=' + endKm : '');
+      + ((endKm !== undefined) ? '&endKilometer=' + endKm : '')
+      + ((drivewaySubtype !== undefined) ? '&drivewaySubtype=' + drivewaySubtype : '');
     console.log('request: ' + request);
     const roadsections$ =
       this._httpClient.get<Array<RoadsectionModel>>(request);
     roadsections$.subscribe(value => {
       roadsections = value;
-      for (let index = 0; index < roadsections.length; index++) {
-        this.getGeometry(roadsections[index].id)
-          .subscribe(next => {
-              roadsections[index].geometry = next;
-              roadsections[index].strokeColor = '#FF0000';
-            },
-            error2 => {
-            },
-            () => {
-              if (index === roadsections.length - 1) {
-                this.geometryUpdated.emit('ready');
-              }
-            }
-          );
-      }
     }, error2 => {
       console.log(error2);
       this.loading = 'On error: ' + error2;
@@ -82,4 +70,41 @@ export class RoadsectionService {
     }
   }
 
+  calculateBounds(roadsections: RoadsectionModel[]): LatLngBounds {
+    const minLatLng = {lat: 90.0, lng: 180.0};
+    const maxLatLng = {lat: 0.0, lng: 0.0};
+    for (let i = 0; i < roadsections.length; i++) {
+      const roadsection = roadsections[i];
+      console.log('roadsection.id: ' + roadsection.id + ' roadsection.geometry: ' + roadsection.geometry);
+      if (roadsection.geometry !== undefined) {
+        const polylines = roadsection.geometry.multiLineString;
+        for (let j = 0; j < polylines.length; j++) {
+          const polyline = polylines[j];
+          const lat = polyline.coordinate.lat;
+          const lng = polyline.coordinate.lng;
+          if (lat > maxLatLng.lat) {
+            maxLatLng.lat = lat;
+          }
+          if (lat < minLatLng.lat) {
+            minLatLng.lat = lat;
+          }
+          if (lng > maxLatLng.lng) {
+            maxLatLng.lng = lng;
+          }
+          if (lng < minLatLng.lng) {
+            minLatLng.lng = lng;
+          }
+        }
+      }
+    }
+    const fitBounds = new google.maps.LatLngBounds();
+    fitBounds.extend(minLatLng);
+    fitBounds.extend(maxLatLng);
+    console.log('fitBounds: ' + fitBounds.toString());
+    return fitBounds;
+  }
+
+  getDrivewaySubtypes(): Observable<Array<DrivewaySubtypeModel>> {
+    return this._httpClient.get<Array<DrivewaySubtypeModel>>(this.apiAddress + '/roadsections/drivewaysubtypes');
+  }
 }

@@ -12,3 +12,10 @@ agm-map {
   height: 850px;
   overflow-y: auto;
 }
+
+.table-record {
+  cursor: pointer;
+}
+.table-record-selected{
+  background-color: lightpink;
+}

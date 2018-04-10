@@ -4,13 +4,13 @@
       <agm-info-window>Hello World!</agm-info-window>
     </agm-marker>
     <agm-polyline *ngFor="let roadsection of roadsections;trackBy: trackById"
-                  [strokeColor]="(roadsection == selectedRoadsection)?'#FFFF00':roadsection.strokeColor"
+                  [strokeColor]="(roadsection == selectedRoadsection)?'#FFFF00':'#FF0000'"
                   (lineMouseOver)="lineMouseOver(roadsection, infoWindow, $event)">
       <agm-info-window #infoWindow [latitude]="roadsection_infowindow_lat" [longitude]="roadsection_infowindow_lng">
         {{roadsection.id}}
       </agm-info-window>
       <div *ngIf="roadsection.geometry">
-        <agm-polyline-point *ngFor="let point of roadsection.geometry.wgs84MultiLineString"
+        <agm-polyline-point *ngFor="let point of roadsection.geometry.multiLineString"
                             [latitude]="point.coordinate.lat"
                             [longitude]="point.coordinate.lng">
         </agm-polyline-point>

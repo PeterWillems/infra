@@ -23,11 +23,12 @@
         </thead>
         <tbody>
         <tr class="table-record {{roadsection==selectedRoadsection?'table-record-selected':''}}"
-            *ngFor="let roadsection of roadsections" (click)="show(roadsection)">
+            *ngFor="let roadsection of roadsections" id="{{roadsection.id}}" (click)="show(roadsection)"
+            (dblclick)="zoomIn(roadsection)">
           <td>{{roadsection.id}}</td>
           <td>{{roadsection.beginKilometer}}</td>
           <td>{{roadsection.endKilometer}}</td>
-          <td>{{roadsection.drivewaySubtype.drivewaySubtypeCode}}</td>
+          <td>{{roadsection.drivewaySubtype ? roadsection.drivewaySubtype.drivewaySubtypeCode : 'null'}}</td>
         </tr>
         </tbody>
       </table>

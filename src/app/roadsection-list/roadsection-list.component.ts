@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges, SimpleChange} from '@angular/core';
 import {RoadsectionModel} from '../models/roadsection.model';
 
 @Component({
@@ -6,11 +6,13 @@ import {RoadsectionModel} from '../models/roadsection.model';
   templateUrl: './roadsection-list.component.html',
   styleUrls: ['./roadsection-list.component.css']
 })
-export class RoadsectionListComponent implements OnInit {
+export class RoadsectionListComponent implements OnInit, OnChanges {
   @Input() roadsections: RoadsectionModel[];
-  selectedRoadsection: RoadsectionModel;
+  @Input() selectedRoadsection: RoadsectionModel;
   @Output() selectedRoadsectionChanged: EventEmitter<RoadsectionModel> = new EventEmitter<RoadsectionModel>();
+  @Output() zoomInChanged: EventEmitter<RoadsectionModel> = new EventEmitter<RoadsectionModel>();
   private sortColumn: string;
+  private showClicked = false;
 
   constructor() {
   }
@@ -43,10 +45,28 @@ export class RoadsectionListComponent implements OnInit {
     return '';
   }
 
-  show(roadsection: RoadsectionModel) {
+  show(roadsection: RoadsectionModel): void {
+    this.showClicked = true;
     console.log(roadsection.id + ' clicked.');
     this.selectedRoadsection = roadsection;
     this.selectedRoadsectionChanged.emit(this.selectedRoadsection);
   }
 
+  zoomIn(roadsection: RoadsectionModel): void {
+    console.log(roadsection.id + ' double clicked.');
+    this.zoomInChanged.emit(this.selectedRoadsection);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.showClicked) {
+      const selectedRoadsectionChange: SimpleChange = changes.selectedRoadsection;
+      if (selectedRoadsectionChange !== undefined) {
+        const currentSelectedRoadsection: RoadsectionModel = <RoadsectionModel>selectedRoadsectionChange.currentValue;
+        if (currentSelectedRoadsection !== undefined) {
+          document.getElementById(currentSelectedRoadsection.id.toString()).scrollIntoView();
+        }
+      }
+    }
+    this.showClicked = false;
+  }
 }

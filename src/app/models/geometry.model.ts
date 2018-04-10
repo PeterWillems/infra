@@ -1,24 +1,14 @@
-import {Wgs84multilinestringModel} from './wgs84multilinestring.model';
-import {RdmultilinestringModel} from './rdmultilinestring.model';
+import {MultilinestringModel} from './multilinestring.model';
 
 export class GeometryModel {
-  get rdmultiLineString(): RdmultilinestringModel[] {
-    return this._rdmultiLineString;
+  get multiLineString(): MultilinestringModel[] {
+    return this._multiLineString;
   }
 
-  set rdmultiLineString(value: RdmultilinestringModel[]) {
-    this._rdmultiLineString = value;
+  set multiLineString(value: MultilinestringModel[]) {
+    this._multiLineString = value;
   }
 
-  get wgs84MultiLineString(): Wgs84multilinestringModel[] {
-    return this._wgs84MultiLineString;
-  }
-
-  set wgs84MultiLineString(value: Wgs84multilinestringModel[]) {
-    this._wgs84MultiLineString = value;
-  }
-
-  private _rdmultiLineString: RdmultilinestringModel[];
-  private _wgs84MultiLineString: Wgs84multilinestringModel[];
+  private _multiLineString: MultilinestringModel[];
 
 }

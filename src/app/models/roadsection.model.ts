@@ -17,5 +17,9 @@ export interface RoadsectionModel {
   endJunction: Url;
   geometry: GeometryModel;
   hectoLetter: string;
+  municipalityId: number;
+  municipalityName: string;
+  residence: string;
+  streetName: string;
   strokeColor: string;
 }

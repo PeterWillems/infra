@@ -1,4 +1,4 @@
-<div *ngIf="selectedRoadsection">
+<div *ngIf="selectedRoadsection" class="component">
   <div class="card border-primary">
     <div class="card-header">
       geselecteerd wegvak {{selectedRoadsection.id}}
@@ -42,14 +42,18 @@
         </tr>
         <tr>
           <td>baan</td>
-          <td>{{selectedRoadsection.drivewaySubtype.drivewaySubtypeCode}}</td>
+          <td>{{selectedRoadsection.drivewaySubtype ? selectedRoadsection.drivewaySubtype.drivewaySubtypeCode :
+            'null'}}
+          </td>
         </tr>
         <tr>
           <td>baanpositie</td>
-          <td>{{selectedRoadsection.drivewayPosition.drivewayPositionCode}}</td>
+          <td>{{selectedRoadsection.drivewayPosition ? selectedRoadsection.drivewayPosition.drivewayPositionCode :
+            'null'}}
+          </td>
         </tr>
         <tr>
-          <td>administratieve richting</td>
+          <td>admin. richting</td>
           <td>{{selectedRoadsection.administrativeDirection | direction}}</td>
         </tr>
         <tr>
@@ -59,6 +63,22 @@
         <tr>
           <td>hectoletter</td>
           <td>{{selectedRoadsection.hectoLetter}}</td>
+        </tr>
+        <tr>
+          <td>gemeente id</td>
+          <td>{{selectedRoadsection.municipalityId}}</td>
+        </tr>
+        <tr>
+          <td>gemeentenaam</td>
+          <td>{{selectedRoadsection.municipalityName}}</td>
+        </tr>
+        <tr>
+          <td>straatnaam</td>
+          <td>{{selectedRoadsection.streetName}}</td>
+        </tr>
+        <tr>
+          <td>woonplaats</td>
+          <td>{{selectedRoadsection.residence}}</td>
         </tr>
         </tbody>
       </table>
