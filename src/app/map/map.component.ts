@@ -21,9 +21,7 @@ export class MapComponent implements OnInit, OnChanges {
 
   roadsection_infowindow_lat = 52.07950281002701;
   roadsection_infowindow_lng = 4.392345417290926;
-  private _lastRoadsection: RoadsectionModel;
-  private _lastInfoWindow: AgmInfoWindow;
-  private _mouseOverEvent = false;
+  mouseOverEvent = false;
 
 
   constructor() {
@@ -42,35 +40,27 @@ export class MapComponent implements OnInit, OnChanges {
   }
 
   lineMouseOver(roadsection: RoadsectionModel, infoWindow: AgmInfoWindow, $event: PolyMouseEvent): void {
-    this._mouseOverEvent = true;
-    console.log($event.latLng.toString());
+    this.mouseOverEvent = true;
     const latLng = $event.latLng;
     this.roadsection_infowindow_lng = latLng.lng();
     this.roadsection_infowindow_lat = latLng.lat();
-    // roadsection.strokeColor = '#FFFF00';
     this.selectedRoadsection = roadsection;
     infoWindow.open();
-    // if (this._lastRoadsection && this._lastRoadsection.id !== roadsection.id) {
-    //   this._lastRoadsection.strokeColor = '#FF0000';
-    // }
-    this._lastRoadsection = roadsection;
-    if (this._lastInfoWindow) {
-      this._lastInfoWindow.close();
-    }
-    this._lastInfoWindow = infoWindow;
     this.selectedRoadsectionChanged.emit(this.selectedRoadsection);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     const selectedRoadsectionChange: SimpleChange = changes.selectedRoadsection;
-    if (selectedRoadsectionChange !== undefined) {
-      const currentSelectedRoadsection: RoadsectionModel = <RoadsectionModel>selectedRoadsectionChange.currentValue;
-      if (currentSelectedRoadsection !== undefined && !this._mouseOverEvent) {
-        if (this._lastInfoWindow) {
-          this._lastInfoWindow.close();
-        }
+    if (selectedRoadsectionChange !== undefined && selectedRoadsectionChange.currentValue !== undefined) {
+      if (!this.mouseOverEvent) {
+        const lineSize = (<RoadsectionModel>selectedRoadsectionChange.currentValue).geometry.multiLineString.length;
+        const coord = (<RoadsectionModel>selectedRoadsectionChange.currentValue)
+          .geometry.multiLineString[Math.floor(lineSize / 2)].coordinate;
+        this.roadsection_infowindow_lng = coord.lng;
+        this.roadsection_infowindow_lat = coord.lat;
       }
-      this._mouseOverEvent = false;
     }
+    this.mouseOverEvent = false;
   }
+
 }

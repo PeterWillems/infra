@@ -37,9 +37,9 @@ export class DatasetsComponent implements OnInit {
   show(dataset: Dataset): void {
     this.selectedDataset = dataset;
     if (dataset.start > dataset.end) {
-      this._roadsectionService.getRoadSections(dataset.road.substring(1), dataset.way.endsWith('R'), dataset.end, dataset.start);
+      this._roadsectionService.getRoadSections(dataset.road.substring(1), dataset.way.endsWith('R'), dataset.end, dataset.start, 'HR');
     } else {
-      this._roadsectionService.getRoadSections(dataset.road.substring(1), dataset.way.endsWith('R'), dataset.start, dataset.end);
+      this._roadsectionService.getRoadSections(dataset.road.substring(1), dataset.way.endsWith('R'), dataset.start, dataset.end, 'HR');
     }
   }
 }

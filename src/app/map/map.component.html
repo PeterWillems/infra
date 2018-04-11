@@ -6,7 +6,8 @@
     <agm-polyline *ngFor="let roadsection of roadsections;trackBy: trackById"
                   [strokeColor]="(roadsection == selectedRoadsection)?'#FFFF00':'#FF0000'"
                   (lineMouseOver)="lineMouseOver(roadsection, infoWindow, $event)">
-      <agm-info-window #infoWindow [latitude]="roadsection_infowindow_lat" [longitude]="roadsection_infowindow_lng">
+      <agm-info-window #infoWindow [latitude]="roadsection_infowindow_lat" [longitude]="roadsection_infowindow_lng"
+                       [isOpen]="roadsection === selectedRoadsection" >
         {{roadsection.id}}
       </agm-info-window>
       <div *ngIf="roadsection.geometry">

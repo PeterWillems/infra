@@ -1,6 +1,7 @@
 export interface Dataset {
   datasetLabel: string;
   dataReference: string;
+  projectLabel: string;
   ownerLabel: string;
   contactLabel: string;
   infraLabel: string;
