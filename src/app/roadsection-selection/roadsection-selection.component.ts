@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {RoadsectionService} from '../roadsection.service';
 import {RoadsectionModel} from '../models/roadsection.model';
 import {DrivewaySubtypeModel} from '../models/drivewaySubtype.model';
+import {RoadsectionSelection} from '../models/roadsection-selection.model';
 
 @Component({
   selector: 'app-roadsection-selection',
@@ -16,17 +17,21 @@ export class RoadsectionSelectionComponent implements OnInit {
   private roadsections: Array<RoadsectionModel>;
   private selectedRoadsection: RoadsectionModel;
 
-  roadId: string;
-  right: boolean;
-  beginKm: number;
-  endKm: number;
-  drivewaySubtypeCode: string;
+  // roadId: string;
+  // direction: boolean;
+  // right: boolean;
+  // beginKm: number;
+  // endKm: number;
+  // drivewaySubtypeCode: string;
   drivewaySubtypes: Array<DrivewaySubtypeModel>;
   roadNumbers: string[];
-  checked = {id: true, right: true, beginKm: true, endKm: true, drivewaySubtype: true};
+  roadsectionSelection: RoadsectionSelection;
+  // checked = {id: true, direction: true, right: true, beginKm: true, endKm: true, drivewaySubtype: true};
   loading: string;
 
   constructor(private _roadsectionService: RoadsectionService) {
+    this.roadNumbers = [];
+    this.roadsectionSelection = new RoadsectionSelection();
   }
 
   ngOnInit() {
@@ -42,21 +47,37 @@ export class RoadsectionSelectionComponent implements OnInit {
   }
 
   getRoad(): void {
-    if (this.checked.id && !this.checked.right && !this.checked.beginKm && !this.checked.endKm && !this.checked.drivewaySubtype) {
-      this._roadsectionService.getRoadSections(this.roadId);
-    } else if (this.checked.id && this.checked.right && !this.checked.beginKm && !this.checked.endKm && !this.checked.drivewaySubtype) {
-      this._roadsectionService.getRoadSections(this.roadId, this.right);
-    } else if (this.checked.id && this.checked.right && this.checked.beginKm && !this.checked.endKm && !this.checked.drivewaySubtype) {
-      this._roadsectionService.getRoadSections(this.roadId, this.right, this.beginKm);
-    } else if (this.checked.id && this.checked.right && this.checked.beginKm && this.checked.endKm && !this.checked.drivewaySubtype) {
-      this._roadsectionService.getRoadSections(this.roadId, this.right, this.beginKm, this.endKm);
-    } else {
-      this._roadsectionService.getRoadSections(this.roadId, this.right, this.beginKm, this.endKm, this.drivewaySubtypeCode);
-    }
+    console.log('road: ' + this.roadsectionSelection.road +
+      ', direction: ' + this.roadsectionSelection.direction +
+      ', beginKm: ' + this.roadsectionSelection.beginKm +
+      ', endKm: ' + this.roadsectionSelection.beginKm +
+      ', drivewaySubtype: ' + this.roadsectionSelection.drivewaySubtype);
+    this._roadsectionService.getRoadSections(
+      this.roadsectionSelection.active.road ? this.roadsectionSelection.road : undefined,
+      this.roadsectionSelection.active.direction ? this.roadsectionSelection.direction : undefined,
+      this.roadsectionSelection.active.beginKm ? this.roadsectionSelection.beginKm : undefined,
+      this.roadsectionSelection.active.endKm ? this.roadsectionSelection.endKm : undefined,
+      this.roadsectionSelection.active.drivewaySubtype ? this.roadsectionSelection.drivewaySubtype : undefined);
+
+    // if (this.checked.id && !this.checked.right && !this.checked.beginKm && !this.checked.endKm && !this.checked.drivewaySubtype) {
+    //   this._roadsectionService.getRoadSections(this.roadId);
+    // } else if (this.checked.id && this.checked.right && !this.checked.beginKm && !this.checked.endKm && !this.checked.drivewaySubtype) {
+    //   this._roadsectionService.getRoadSections(this.roadId, this.right);
+    // } else if (this.checked.id && this.checked.right && this.checked.beginKm && !this.checked.endKm && !this.checked.drivewaySubtype) {
+    //   this._roadsectionService.getRoadSections(this.roadId, this.right, this.beginKm);
+    // } else if (this.checked.id && this.checked.right && this.checked.beginKm && this.checked.endKm && !this.checked.drivewaySubtype) {
+    //   this._roadsectionService.getRoadSections(this.roadId, this.right, this.beginKm, this.endKm);
+    // } else {
+    //   this._roadsectionService.getRoadSections(this.roadId, this.right, this.beginKm, this.endKm, this.drivewaySubtypeCode);
+    // }
   }
 
   toggleChecked(label: string) {
-    this.checked[label] = !this.checked[label];
+    this.roadsectionSelection.active[label] = !this.roadsectionSelection.active[label];
+  }
+
+  toggleDirection() {
+    this.roadsectionSelection.direction = !this.roadsectionSelection.direction;
   }
 
   onSelectedRoadsectionChange(roadsection: RoadsectionModel): void {

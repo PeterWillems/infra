@@ -5,7 +5,7 @@
         <div class="card-header">
           wegvak selectie
         </div>
-        <div class="card-body">
+        <div *ngIf="roadsectionSelection" class="card-body">
           <table class="table table-bordered table-sm">
             <thead class="thead-light">
             <tr>
@@ -16,35 +16,52 @@
             </thead>
             <tbody>
             <tr>
-              <td><input type="checkbox" [checked]="checked.id" (click)="toggleChecked('id')"></td>
+              <td><input type="checkbox" [checked]="roadsectionSelection.active.road" (click)="toggleChecked('road')">
+              </td>
               <td>weg ID:</td>
-              <td *ngIf="roadNumbers">
-                <select class="form-control" [(ngModel)]="roadId" [disabled]="!checked.id">
+              <td>
+                <select class="form-control" [(ngModel)]="roadsectionSelection.road"
+                        [disabled]="!roadsectionSelection.active.road">
                   <option class="form-control" *ngFor="let roadNumber of roadNumbers">{{roadNumber}}</option>
                 </select>
               </td>
             </tr>
             <tr>
-              <td><input type="checkbox" [checked]="checked.right" (click)="toggleChecked('right')"></td>
-              <td>rechts:</td>
-              <td><input type="checkbox" [(ngModel)]="right" [disabled]="!checked.right"></td>
+              <td><input type="checkbox" [checked]="roadsectionSelection.active.direction"
+                         (click)="toggleChecked('direction')"></td>
+              <td>richting:</td>
+              <td>
+                <label class="radio-inline">
+                  <input type="radio" name="direction" [disabled]="!roadsectionSelection.active.direction"
+                         [checked]="!roadsectionSelection.direction" (click)="toggleDirection()">links</label>
+                <label class="radio-inline">
+                  <input type="radio" name="direction" [disabled]="!roadsectionSelection.active.direction"
+                         [checked]="roadsectionSelection.direction" (click)="toggleDirection()">rechts</label>
+              </td>
             </tr>
             <tr>
-              <td><input type="checkbox" [checked]="checked.beginKm" (click)="toggleChecked('beginKm')"></td>
+              <td><input type="checkbox" [checked]="roadsectionSelection.active.beginKm"
+                         (click)="toggleChecked('beginKm')"></td>
               <td>begin KM:</td>
-              <td><input class="form-control" [(ngModel)]="beginKm" [disabled]="!checked.beginKm" type="number"></td>
+              <td><input class="form-control" [(ngModel)]="roadsectionSelection.beginKm"
+                         [disabled]="!roadsectionSelection.active.beginKm" type="number"></td>
             </tr>
             <tr>
-              <td><input type="checkbox" [checked]="checked.endKm" (click)="toggleChecked('endKm')"></td>
+              <td><input type="checkbox" [checked]="roadsectionSelection.active.endKm" (click)="toggleChecked('endKm')">
+              </td>
               <td>eind KM:</td>
-              <td><input class="form-control" [(ngModel)]="endKm" [disabled]="!checked.endKm" type="number"></td>
+              <td><input class="form-control" [(ngModel)]="roadsectionSelection.endKm"
+                         [disabled]="!roadsectionSelection.active.endKm" type="number"></td>
             </tr>
             <tr>
-              <td><input type="checkbox" [checked]="checked.drivewaySubtype" (click)="toggleChecked('drivewaySubtype')">
+              <td><input type="checkbox" [checked]="roadsectionSelection.active.drivewaySubtype"
+                         (click)="toggleChecked('drivewaySubtype')">
               </td>
               <td>baansubsoort:</td>
-              <select class="form-control" [(ngModel)]="drivewaySubtypeCode" [disabled]="!checked.drivewaySubtype">
-                <option class="form-control" *ngFor="let drivewaySubtype of drivewaySubtypes">
+              <select class="form-control" [(ngModel)]="roadsectionSelection.drivewaySubtype"
+                      [disabled]="!roadsectionSelection.active.drivewaySubtype">
+                <option class="form-control" *ngFor="let drivewaySubtype of drivewaySubtypes"
+                        [selected]="drivewaySubtype.drivewaySubtypeCode==roadsectionSelection.drivewaySubtype">
                   {{drivewaySubtype.drivewaySubtypeCode}}
                 </option>
               </select>

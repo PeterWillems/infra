@@ -20,6 +20,7 @@ export interface RoadsectionModel {
   municipalityId: number;
   municipalityName: string;
   residence: string;
+  roadNumber: string;
   streetName: string;
   strokeColor: string;
 }

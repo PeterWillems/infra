@@ -29,17 +29,28 @@ export class RoadsectionService {
     return this._httpClient.get<GeometryModel>(this.apiAddress + '/roadsections/' + roadsectionId + '/geometry');
   }
 
-  getRoadSections(roadId?: string, right?: boolean, beginKm?: number, endKm?: number, drivewaySubtype?: string): void {
+  getRoadSections(roadId?: string, direction?: boolean, beginKm?: number, endKm?: number, drivewaySubtype?: string): void {
     console.log('Loading ...');
     this.loading = 'Loading ...';
     this.loadingUpdated.emit(this.loading);
     let roadsections: Array<RoadsectionModel> = [];
-    const request = this.apiAddress
-      + ((roadId !== undefined) ? '/roadsections?road=' + roadId : '')
-      + ((right !== undefined) ? '&right=' + right : '')
-      + ((beginKm !== undefined) ? '&beginKilometer=' + beginKm : '')
-      + ((endKm !== undefined) ? '&endKilometer=' + endKm : '')
-      + ((drivewaySubtype !== undefined) ? '&drivewaySubtype=' + drivewaySubtype : '');
+    const roadIdPresent = (roadId !== undefined);
+    const directionPresent = (direction !== undefined);
+    const beginKmPresent = (beginKm !== undefined);
+    const endKmPresent = (endKm !== undefined);
+    const drivewaySubtypePresent = (drivewaySubtype !== undefined);
+    const anyParameters = roadIdPresent || directionPresent || beginKmPresent || endKmPresent || drivewaySubtypePresent;
+    const request = this.apiAddress + '/roadsections' + (anyParameters ? '?' : '')
+      + (roadIdPresent ? ('road=' + roadId) : '')
+      + (directionPresent ? ((roadIdPresent ? '&' : '')
+        + 'direction=' + direction) : '')
+      + (beginKmPresent ? ((roadIdPresent || directionPresent ? '&' : '')
+        + 'beginKilometer=' + beginKm) : '')
+      + (endKmPresent ? ((roadIdPresent || directionPresent || beginKmPresent ? '&' : '')
+        + 'endKilometer=' + endKm) : '')
+      + (drivewaySubtypePresent ?
+        ((roadIdPresent || directionPresent || beginKmPresent || endKmPresent ? '&' : '')
+          + 'drivewaySubtype=' + drivewaySubtype) : '');
     console.log('request: ' + request);
     const roadsections$ =
       this._httpClient.get<Array<RoadsectionModel>>(request);
