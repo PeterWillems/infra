@@ -26,8 +26,8 @@
             *ngFor="let roadsection of roadsections" id="{{roadsection.id}}" (click)="show(roadsection)"
             (dblclick)="zoomIn(roadsection)">
           <td>{{roadsection.id}}</td>
-          <td>{{roadsection.beginKilometer}}</td>
-          <td>{{roadsection.endKilometer}}</td>
+          <td>{{roadsection.beginKilometer | number : '1.3-3'}}</td>
+          <td>{{roadsection.endKilometer | number : '1.3-3'}}</td>
           <td>{{roadsection.drivewaySubtype ? roadsection.drivewaySubtype.drivewaySubtypeCode : 'null'}}</td>
         </tr>
         </tbody>

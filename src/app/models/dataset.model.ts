@@ -1,5 +1,6 @@
 export interface Dataset {
   datasetLabel: string;
+  measurementYears: string[];
   dataReference: string;
   projectLabel: string;
   ownerLabel: string;
@@ -7,6 +8,7 @@ export interface Dataset {
   infraLabel: string;
   road: string;
   way: string;
+  lane: string;
   start: number;
   end: number;
   decimalSymbol: string;

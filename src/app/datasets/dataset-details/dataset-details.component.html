@@ -16,6 +16,10 @@
         <td>{{selectedDataset.datasetLabel}}</td>
       </tr>
       <tr>
+        <td>measurement years</td>
+        <td>{{selectedDataset.measurementYears}}</td>
+      </tr>
+      <tr>
         <td>data reference</td>
         <td>
           <a href="{{selectedDataset.dataReference}}">
@@ -48,7 +52,7 @@
         <td>{{selectedDataset.contactLabel}}</td>
       </tr>
       <tr>
-        <td>infra</td>
+        <td>BPS</td>
         <td>{{selectedDataset.infraLabel}}</td>
       </tr>
       <tr>
@@ -60,12 +64,16 @@
         <td>{{selectedDataset.way}}</td>
       </tr>
       <tr>
+        <td>lane</td>
+        <td>{{selectedDataset.lane}}</td>
+      </tr>
+      <tr>
         <td>start</td>
-        <td>{{selectedDataset.start}}</td>
+        <td>{{selectedDataset.start | number : '1.1-1'}} km</td>
       </tr>
       <tr>
         <td>end</td>
-        <td>{{selectedDataset.end}}</td>
+        <td>{{selectedDataset.end | number : '1.1-1'}} km</td>
       </tr>
       </tbody>
     </table>

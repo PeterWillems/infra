@@ -3,8 +3,9 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {GeometryModel} from './models/geometry.model';
 import {RoadsectionModel} from './models/roadsection.model';
-import LatLngBounds = google.maps.LatLngBounds;
+import {} from '@types/googlemaps';
 import {DrivewaySubtypeModel} from './models/drivewaySubtype.model';
+import LatLngBounds = google.maps.LatLngBounds;
 
 @Injectable()
 export class RoadsectionService {

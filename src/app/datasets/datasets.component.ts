@@ -13,9 +13,9 @@ import LatLngBounds = google.maps.LatLngBounds;
   providers: [DatasetService, RoadsectionService]
 })
 export class DatasetsComponent implements OnInit {
-  private maptype = 'roadmap';
-  private map_lat = 52.07950281002701;
-  private map_lng = 4.392345417290926;
+  maptype = 'roadmap';
+  map_lat = 52.07950281002701;
+  map_lng = 4.392345417290926;
   datasets: Array<Dataset>;
   selectedDataset: Dataset;
   roadsections: Array<RoadsectionModel>;

@@ -10,23 +10,16 @@ import {RoadsectionSelection} from '../models/roadsection-selection.model';
   styleUrls: ['./roadsection-selection.component.css']
 })
 export class RoadsectionSelectionComponent implements OnInit {
-  private maptype = 'roadmap';
-  private map_lat = 52.07950281002701;
-  private map_lng = 4.392345417290926;
-  private fitBounds: google.maps.LatLngBounds;
-  private roadsections: Array<RoadsectionModel>;
-  private selectedRoadsection: RoadsectionModel;
+  maptype = 'roadmap';
+  map_lat = 52.07950281002701;
+  map_lng = 4.392345417290926;
+  fitBounds: google.maps.LatLngBounds;
+  roadsections: Array<RoadsectionModel>;
+  selectedRoadsection: RoadsectionModel;
 
-  // roadId: string;
-  // direction: boolean;
-  // right: boolean;
-  // beginKm: number;
-  // endKm: number;
-  // drivewaySubtypeCode: string;
   drivewaySubtypes: Array<DrivewaySubtypeModel>;
   roadNumbers: string[];
   roadsectionSelection: RoadsectionSelection;
-  // checked = {id: true, direction: true, right: true, beginKm: true, endKm: true, drivewaySubtype: true};
   loading: string;
 
   constructor(private _roadsectionService: RoadsectionService) {

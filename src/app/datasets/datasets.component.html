@@ -12,8 +12,9 @@
               <th>dataset</th>
               <th>road</th>
               <th>way</th>
-              <th>start</th>
-              <th>end</th>
+              <th>lane</th>
+              <th>start [km]</th>
+              <th>end [km]</th>
             </tr>
             </thead>
             <tbody>
@@ -22,8 +23,9 @@
               <td>{{dataset.datasetLabel}}</td>
               <td>{{dataset.road}}</td>
               <td>{{dataset.way}}</td>
-              <td>{{dataset.start}}</td>
-              <td>{{dataset.end}}</td>
+              <td>{{dataset.lane}}</td>
+              <td align="right">{{dataset.start | number : '1.1-1'}}</td>
+              <td align="right">{{dataset.end | number : '1.1-1'}}</td>
             </tr>
             </tbody>
           </table>
