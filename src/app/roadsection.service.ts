@@ -30,8 +30,13 @@ export class RoadsectionService {
     return this._httpClient.get<GeometryModel>(this.apiAddress + '/roadsections/' + roadsectionId + '/geometry');
   }
 
-  getRoadSections(roadId?: string, direction?: boolean, beginKm?: number, endKm?: number, drivewaySubtype?: string): void {
-    console.log('Loading ...');
+  getRoadSections(datasetLabel: string,
+                  roadId?: string,
+                  direction?: boolean,
+                  beginKm?: number,
+                  endKm?: number,
+                  drivewaySubtype?: string): void {
+    console.log('Loading ...' + datasetLabel);
     this.loading = 'Loading ...';
     this.loadingUpdated.emit(this.loading);
     let roadsections: Array<RoadsectionModel> = [];
@@ -57,6 +62,9 @@ export class RoadsectionService {
       this._httpClient.get<Array<RoadsectionModel>>(request);
     roadsections$.subscribe(value => {
       roadsections = value;
+      for (let index = 0; index < roadsections.length; index++) {
+        roadsections[index].datasetLabel = datasetLabel;
+      }
     }, error2 => {
       console.log(error2);
       this.loading = 'On error: ' + error2;

@@ -1,7 +1,7 @@
 import {Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, SimpleChange} from '@angular/core';
 import {RoadsectionModel} from '../models/roadsection.model';
 import {AgmInfoWindow, PolyMouseEvent} from '@agm/core';
-import {LatLngBounds} from '@agm/core/services/google-maps-types';
+import {LatLngBounds, Polyline} from '@agm/core/services/google-maps-types';
 
 @Component({
   selector: 'app-map',
@@ -12,10 +12,14 @@ export class MapComponent implements OnInit, OnChanges {
   @Input() map_lat: number;
   @Input() map_lng: number;
   @Input() maptype: string;
+  @Input() overview = false;
   @Input() fitBounds: LatLngBounds;
   @Input() roadsections: Array<RoadsectionModel>;
   @Input() selectedRoadsection: RoadsectionModel;
   @Output() selectedRoadsectionChanged: EventEmitter<RoadsectionModel> = new EventEmitter<RoadsectionModel>();
+  @Output() selectedDatasetChanged: EventEmitter<string> = new EventEmitter<string>();
+  @Output() showOverview: EventEmitter<string> = new EventEmitter<string>();
+  private _datasetLabel: string;
 
   selectedMaptype: string;
 
@@ -40,13 +44,20 @@ export class MapComponent implements OnInit, OnChanges {
   }
 
   lineMouseOver(roadsection: RoadsectionModel, infoWindow: AgmInfoWindow, $event: PolyMouseEvent): void {
-    this.mouseOverEvent = true;
-    const latLng = $event.latLng;
-    this.roadsection_infowindow_lng = latLng.lng();
-    this.roadsection_infowindow_lat = latLng.lat();
-    this.selectedRoadsection = roadsection;
-    infoWindow.open();
-    this.selectedRoadsectionChanged.emit(this.selectedRoadsection);
+    if (!this.overview) {
+      this.mouseOverEvent = true;
+      const latLng = $event.latLng;
+      this.roadsection_infowindow_lng = latLng.lng();
+      this.roadsection_infowindow_lat = latLng.lat();
+      this.selectedRoadsection = roadsection;
+      infoWindow.open();
+      this.selectedRoadsectionChanged.emit(this.selectedRoadsection);
+    }
+  }
+
+  lineClick(roadsection: RoadsectionModel, dblClick: boolean): void {
+    console.log('lineClick ' + roadsection.datasetLabel + ' dblClick: ' + dblClick);
+    this.selectedDatasetChanged.emit(roadsection.datasetLabel);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -63,4 +74,19 @@ export class MapComponent implements OnInit, OnChanges {
     this.mouseOverEvent = false;
   }
 
+  isNextDatasetLabel(roadsection: RoadsectionModel): boolean {
+    if (!this._datasetLabel) {
+      this._datasetLabel = roadsection.datasetLabel;
+      return true;
+    }
+    if (roadsection.datasetLabel === this._datasetLabel) {
+      return false;
+    }
+    this._datasetLabel = roadsection.datasetLabel;
+    return true;
+  }
+
+  onShowOverviewClicked(): void {
+    this.showOverview.emit();
+  }
 }

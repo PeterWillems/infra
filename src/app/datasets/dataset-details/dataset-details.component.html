@@ -11,13 +11,52 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
+      <tr [ngClass]="isSelected('dataset')?'selected':''">
         <td>dataset</td>
-        <td>{{selectedDataset.datasetLabel}}</td>
+        <td *ngIf="!isSelected('dataset')">{{selectedDataset.datasetLabel}}</td>
+        <td *ngIf="isSelected('dataset')">
+          <input class="form-control" type="text" [(ngModel)]="selectedDataset.datasetLabel"></td>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('dataset')?'selected':''" (click)="onEditClicked('dataset')"></button>
+        </td>
       </tr>
-      <tr>
+      <tr [ngClass]="isSelected('measurement years')?'selected':''">
         <td>measurement years</td>
-        <td>{{selectedDataset.measurementYears}}</td>
+        <td *ngIf="!isSelected('measurement years')">{{selectedDataset.measurementYears}}</td>
+        <td *ngIf="isSelected('measurement years')">
+          <label *ngFor="let year of years">
+            <input id="cb" type="checkbox" [checked]="isSelectedYear(year)" (change)="onYearChanged(year,$event)">
+            {{year}}&nbsp;</label>
+        </td>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('measurement years')?'selected':''"
+                  (click)="onEditClicked('measurement years')"></button>
+        </td>
+      </tr>
+      <tr [ngClass]="isSelected('quantity kind and units')?'selected':''">
+        <td>quantity kind and units</td>
+        <td *ngIf="!isSelected('quantity kind and units')">{{showQuantities(selectedDataset.quantityKindAndUnits)}}</td>
+        <td *ngIf="isSelected('quantity kind and units')">
+          <table>
+            <tr>
+              <th>label</th>
+              <th>quantity</th>
+              <th>unit</th>
+            </tr>
+            <tr *ngFor="let quantity of selectedDataset.quantityKindAndUnits">
+              <td>{{quantity.label}}</td>
+              <td>{{quantity.quantityReference}}</td>
+              <td>{{quantity.unitReference}}</td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('quantity kind and units')?'selected':''"
+                  (click)="onEditClicked('quantity kind and units')"></button>
+        </td>
       </tr>
       <tr>
         <td>data reference</td>
@@ -27,53 +66,105 @@
           </a>
         </td>
       </tr>
-      <tr>
+      <tr [ngClass]="isSelected('project')?'selected':''">
         <td>project</td>
-        <td>{{selectedDataset.projectLabel}}</td>
+        <td *ngIf="!isSelected('project')">{{selectedDataset.projectLabel}}</td>
+        <td *ngIf="isSelected('project')">
+          <select class="form-control" [(ngModel)]="selectedDataset.project">
+            <option class="form-control" *ngFor="let project of projects" [ngValue]="project.uri">{{project.label}}
+            </option>
+          </select>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('project')?'selected':''" (click)="onEditClicked('project')"></button>
+        </td>
       </tr>
-      <tr>
+      <tr [ngClass]="isSelected('owner')?'selected':''">
         <td>owner</td>
-        <td>{{selectedDataset.ownerLabel}}</td>
+        <td *ngIf="!isSelected('owner')">{{selectedDataset.ownerLabel}}</td>
+        <td *ngIf="isSelected('owner')">
+          <select class="form-control" [(ngModel)]="selectedDataset.organisation">
+            <option class="form-control" *ngFor="let organisation of organisations" [ngValue]="organisation.uri">
+              {{organisation.label}}
+            </option>
+          </select>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('owner')?'selected':''" (click)="onEditClicked('owner')"></button>
+        </td>
       </tr>
-      <tr>
+      <tr [ngClass]="isSelected('topic')?'selected':''">
+        <td>topic</td>
+        <td *ngIf="!isSelected('topic')">{{selectedDataset.topicLabel}}</td>
+        <td *ngIf="isSelected('topic')">
+          <select class="form-control" [(ngModel)]="selectedDataset.topic">
+            <option class="form-control" *ngFor="let topic of topics" [ngValue]="topic.uri">{{topic.label}}</option>
+          </select>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('topic')?'selected':''" (click)="onEditClicked('topic')"></button>
+        </td>
+      </tr>
+      <tr [ngClass]="isSelected('decimal symbol')?'selected':''">
         <td>decimal symbol</td>
-        <td>{{selectedDataset.decimalSymbol}}</td>
+        <td *ngIf="!isSelected('decimal symbol')">{{selectedDataset.decimalSymbol}}</td>
+        <td *ngIf="isSelected('decimal symbol')">
+          <select class="form-control" [(ngModel)]="selectedDataset.decimalSymbol">
+            <option class="form-control" *ngFor="let decimalSymbol of decimalSymbols" [ngValue]="decimalSymbol">
+              {{decimalSymbol}}
+            </option>
+          </select>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('decimal symbol')?'selected':''"
+                  (click)="onEditClicked('decimal symbol')"></button>
+        </td>
       </tr>
-      <tr>
-        <td>separator</td>
-        <td>{{selectedDataset.separator}}</td>
+      <tr [ngClass]="isSelected('separator symbol')?'selected':''">
+        <td>separator symbol</td>
+        <td *ngIf="!isSelected('separator symbol')">{{selectedDataset.separator}}</td>
+        <td *ngIf="isSelected('separator symbol')">
+          <select class="form-control" [(ngModel)]="selectedDataset.separator">
+            <option class="form-control" *ngFor="let separator of separators" [ngValue]="separator">{{separator}}
+            </option>
+          </select>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('separator symbol')?'selected':''"
+                  (click)="onEditClicked('separator symbol')"></button>
+        </td>
       </tr>
-      <tr>
+      <tr [ngClass]="isSelected('format')?'selected':''">
         <td>format</td>
-        <td>{{selectedDataset.format}}</td>
+        <td *ngIf="!isSelected('format')">{{selectedDataset.format}}</td>
+        <td *ngIf="isSelected('format')">
+          <select class="form-control" [(ngModel)]="selectedDataset.format">
+            <option class="form-control" *ngFor="let format of formats" [ngValue]="format">{{format}}</option>
+          </select>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('format')?'selected':''" (click)="onEditClicked('format')"></button>
+        </td>
       </tr>
-      <tr>
+      <tr [ngClass]="isSelected('contact')?'selected':''">
         <td>contact</td>
-        <td>{{selectedDataset.contactLabel}}</td>
+        <td *ngIf="!isSelected('contact')">{{selectedDataset.contactLabel}}</td>
+        <td *ngIf="isSelected('contact')">
+          <select class="form-control" [(ngModel)]="selectedDataset.contact">
+            <option class="form-control" *ngFor="let person of persons" [ngValue]="person.uri">
+              {{person.label}}
+            </option>
+          </select>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('contact')?'selected':''" (click)="onEditClicked('contact')"></button>
+        </td>
       </tr>
-      <tr>
-        <td>BPS</td>
-        <td>{{selectedDataset.infraLabel}}</td>
-      </tr>
-      <tr>
-        <td>road</td>
-        <td>{{selectedDataset.road}}</td>
-      </tr>
-      <tr>
-        <td>way</td>
-        <td>{{selectedDataset.way}}</td>
-      </tr>
-      <tr>
-        <td>lane</td>
-        <td>{{selectedDataset.lane}}</td>
-      </tr>
-      <tr>
-        <td>start</td>
-        <td>{{selectedDataset.start | number : '1.1-1'}} km</td>
-      </tr>
-      <tr>
-        <td>end</td>
-        <td>{{selectedDataset.end | number : '1.1-1'}} km</td>
+      <tr *ngFor="let infraObject of selectedDataset.infraObjects">
+        <td>infraobject</td>
+        <td>{{infraObject.infraLabel}} ({{infraObject.start | number : '1.1-1'}}-{{infraObject.end | number :
+          '1.1-1'}})
+        </td>
       </tr>
       </tbody>
     </table>

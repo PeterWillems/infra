@@ -1,15 +1,21 @@
 <div>
   <agm-map [latitude]="map_lat" [longitude]="map_lng" [mapTypeId]="selectedMaptype" [fitBounds]="fitBounds">
-    <agm-marker [latitude]="map_lat" [longitude]="map_lng">
-      <agm-info-window>Hello World!</agm-info-window>
-    </agm-marker>
-    <agm-polyline *ngFor="let roadsection of roadsections;trackBy: trackById"
+    <!--<agm-marker [latitude]="map_lat" [longitude]="map_lng">-->
+    <!--<agm-info-window>Hello World!</agm-info-window>-->
+    <!--</agm-marker>-->
+    <agm-polyline #polyline *ngFor="let roadsection of roadsections;trackBy: trackById"
                   [strokeColor]="(roadsection == selectedRoadsection)?'#FFFF00':'#FF0000'"
-                  (lineMouseOver)="lineMouseOver(roadsection, infoWindow, $event)">
-      <agm-info-window #infoWindow [latitude]="roadsection_infowindow_lat" [longitude]="roadsection_infowindow_lng"
-                       [isOpen]="roadsection === selectedRoadsection" >
-        {{roadsection.id}}
+                  (lineMouseOver)="lineMouseOver(roadsection, infoWindow, $event)"
+                  (lineClick)="lineClick(roadsection, false)" (lineDblClick)="lineClick(roadsection, true)">
+      <agm-info-window #infoWindow [latitude]="roadsection_infowindow_lat"
+                       [longitude]="roadsection_infowindow_lng"
+                       [isOpen]="roadsection === selectedRoadsection">
+        {{roadsection.id}} {{roadsection.datasetLabel}}
       </agm-info-window>
+      <agm-marker *ngIf="overview && isNextDatasetLabel(roadsection)" [label]="roadsection.datasetLabel"
+                  (markerClick)="lineClick(roadsection, $event)"
+                  [latitude]="roadsection.geometry.multiLineString[0].coordinate.lat"
+                  [longitude]="roadsection.geometry.multiLineString[0].coordinate.lng"></agm-marker>
       <div *ngIf="roadsection.geometry">
         <agm-polyline-point *ngFor="let point of roadsection.geometry.multiLineString"
                             [latitude]="point.coordinate.lat"
@@ -18,5 +24,6 @@
       </div>
     </agm-polyline>
   </agm-map>
-  <app-buttons (maptypeChanged)="onSelectedMaptypeChange($event)"></app-buttons>
+  <app-buttons (maptypeChanged)="onSelectedMaptypeChange($event)"
+               (showOverview)="onShowOverviewClicked()"></app-buttons>
 </div>

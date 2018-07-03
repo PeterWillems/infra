@@ -9,6 +9,7 @@ export class ButtonsComponent implements OnInit {
   selectedMaptype: string;
 
   @Output() maptypeChanged: EventEmitter<string> = new EventEmitter<string>();
+  @Output() showOverview: EventEmitter<string> = new EventEmitter<string>();
 
   onMaptypeChange() {
     this.maptypeChanged.emit(this.selectedMaptype);
@@ -21,4 +22,7 @@ export class ButtonsComponent implements OnInit {
     this.selectedMaptype = 'roadmap';
   }
 
+  onShowOverviewClicked(): void {
+    this.showOverview.emit();
+  }
 }

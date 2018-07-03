@@ -1,4 +1,9 @@
 <div class="btn-group">
+  <div>
+    <div class="form-group">
+      <button class="btn btn-outline-info btn-sm" (click)="onShowOverviewClicked()">Overview</button>
+    </div>
+  </div>
   <div class="form-check">
     <input name="maptype" type="radio" class="with-gap" id="roadmap" [(ngModel)]="selectedMaptype" value="roadmap"
            (change)="onMaptypeChange()">

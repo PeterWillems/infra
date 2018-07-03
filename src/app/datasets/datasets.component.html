@@ -18,25 +18,33 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="table-record {{dataset == selectedDataset ? 'table-record-selected' : ''}}"
-                *ngFor="let dataset of datasets" (click)="show(dataset)">
-              <td>{{dataset.datasetLabel}}</td>
-              <td>{{dataset.road}}</td>
-              <td>{{dataset.way}}</td>
-              <td>{{dataset.lane}}</td>
-              <td align="right">{{dataset.start | number : '1.1-1'}}</td>
-              <td align="right">{{dataset.end | number : '1.1-1'}}</td>
-            </tr>
+            <ng-container *ngFor="let dataset of datasets">
+              <tr class="table-record {{dataset == selectedDataset ? 'table-record-selected' : ''}}"
+                  *ngFor="let infraObject of dataset.infraObjects;let i = index" (click)="show(dataset)">
+                <td *ngIf="i == 0" [attr.rowspan]="dataset.infraObjects.length">{{dataset.datasetLabel}}</td>
+                <td>{{infraObject.road}}</td>
+                <td>{{infraObject.way}}</td>
+                <td>{{infraObject.lane}}</td>
+                <td align="right">{{infraObject.start | number : '1.1-1'}}</td>
+                <td align="right">{{infraObject.end | number : '1.1-1'}}</td>
+              </tr>
+            </ng-container>
             </tbody>
           </table>
           <br>
-          <app-dataset-details *ngIf="selectedDataset" [selectedDataset]="selectedDataset"></app-dataset-details>
+          <app-dataset-details *ngIf="selectedDataset"
+                               [selectedDataset]="selectedDataset" [projects]="projects" [organisations]="organisations"
+                               [persons]="persons" [topics]="topics" [decimalSymbols]="decimalSymbols"
+                               [separators]="separators" [formats]="formats"
+                               (update)="onUpdate($event)"></app-dataset-details>
         </div>
       </div>
     </div>
     <div class="col-md-8 column-content">
-      <app-map [map_lat]="map_lat" [map_lng]="map_lng" [maptype]="maptype" [roadsections]="roadsections"
-               [fitBounds]="fitBounds"></app-map>
+      <app-map [map_lat]="map_lat" [map_lng]="map_lng" [maptype]="maptype" [overview]="overview"
+               [roadsections]="roadsections" [fitBounds]="fitBounds"
+               (selectedDatasetChanged)="onSelectedDatasetChange($event)"
+               (showOverview)="onShowOverviewClicked()"></app-map>
     </div>
   </div>
 </div>

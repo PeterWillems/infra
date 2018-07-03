@@ -23,4 +23,5 @@ export interface RoadsectionModel {
   roadNumber: string;
   streetName: string;
   strokeColor: string;
+  datasetLabel: string;
 }

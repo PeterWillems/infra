@@ -46,6 +46,7 @@ export class RoadsectionSelectionComponent implements OnInit {
       ', endKm: ' + this.roadsectionSelection.beginKm +
       ', drivewaySubtype: ' + this.roadsectionSelection.drivewaySubtype);
     this._roadsectionService.getRoadSections(
+      this.roadsectionSelection.road,
       this.roadsectionSelection.active.road ? this.roadsectionSelection.road : undefined,
       this.roadsectionSelection.active.direction ? this.roadsectionSelection.direction : undefined,
       this.roadsectionSelection.active.beginKm ? this.roadsectionSelection.beginKm : undefined,
