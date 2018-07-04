@@ -1,5 +1,6 @@
 export interface InfraObject {
-  infraLabel: string;
+  uri: string;
+  label: string;
   road: string;
   way: string;
   lane: string;

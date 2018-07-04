@@ -49,6 +49,20 @@
               <td>{{quantity.label}}</td>
               <td>{{quantity.quantityReference}}</td>
               <td>{{quantity.unitReference}}</td>
+              <td>
+                <button class="btn btn-default btn-sm fa fa-trash" (click)="removeQuantity(quantity)"></button>
+              </td>
+            </tr>
+            <tr>
+              <td [attr.colspan]="3"><select class="form-control" [(ngModel)]="selectedNewQuantity">
+                <option class="form-control" *ngFor="let selectableQuantity of selectableQuantities"
+                        [ngValue]="selectableQuantity">{{selectableQuantity.label}}
+                </option>
+              </select></td>
+              <td>
+                <button class="btn btn-default btn-sm fa fa-plus" (click)="addQuantity(selectedNewQuantity)"
+                        [disabled]="!selectedNewQuantity"></button>
+              </td>
             </tr>
           </table>
         </td>
@@ -58,12 +72,17 @@
                   (click)="onEditClicked('quantity kind and units')"></button>
         </td>
       </tr>
-      <tr>
+      <tr [ngClass]="isSelected('data reference')?'selected':''">
         <td>data reference</td>
+        <td *ngIf="!isSelected('data reference')"><a href="{{selectedDataset.dataReference}}">
+          {{selectedDataset.dataReference.substring(selectedDataset.dataReference.lastIndexOf('/') + 1)}}
+        </a></td>
+        <td *ngIf="isSelected('data reference')">
+          <input class="form-control" type="text" [(ngModel)]="selectedDataset.dataReference"></td>
         <td>
-          <a href="{{selectedDataset.dataReference}}">
-            {{selectedDataset.dataReference.substring(selectedDataset.dataReference.lastIndexOf('/') + 1)}}
-          </a>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('data reference')?'selected':''"
+                  (click)="onEditClicked('data reference')"></button>
         </td>
       </tr>
       <tr [ngClass]="isSelected('project')?'selected':''">
@@ -160,12 +179,53 @@
                   [ngClass]="isSelected('contact')?'selected':''" (click)="onEditClicked('contact')"></button>
         </td>
       </tr>
-      <tr *ngFor="let infraObject of selectedDataset.infraObjects">
-        <td>infraobject</td>
-        <td>{{infraObject.infraLabel}} ({{infraObject.start | number : '1.1-1'}}-{{infraObject.end | number :
-          '1.1-1'}})
+      <tr [ngClass]="isSelected('infraobjects')?'selected':''">
+        <td>infraobjects</td>
+        <td *ngIf="!isSelected('infraobjects')">{{showInfraobjects(selectedDataset.infraObjects)}}</td>
+        <td *ngIf="isSelected('infraobjects')">
+          <table>
+            <tr>
+              <th>road</th>
+              <th>way</th>
+              <th>lane</th>
+              <th>start</th>
+              <th>end</th>
+            </tr>
+            <tr *ngFor="let infraObject of selectedDataset.infraObjects">
+              <td>{{infraObject.road}}</td>
+              <td>{{infraObject.way}}</td>
+              <td>{{infraObject.lane}}</td>
+              <td>{{infraObject.start}}</td>
+              <td>{{infraObject.end}}</td>
+              <td>
+                <button class="btn btn-default btn-sm fa fa-trash" (click)="removeInfraobject(infraObject)"></button>
+              </td>
+            </tr>
+            <tr>
+              <td [attr.colspan]="5"><select class="form-control" [(ngModel)]="selectedNewInfraObject">
+                <option class="form-control" *ngFor="let selectableInfraObject of selectableInfraObjects"
+                        [ngValue]="selectableInfraObject">{{selectableInfraObject.label}}
+                </option>
+              </select></td>
+              <td>
+                <button class="btn btn-default btn-sm fa fa-plus" (click)="addInfraobject(selectedNewInfraObject)"
+                        [disabled]="!selectedNewInfraObject"></button>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('infraobjects')?'selected':''"
+                  (click)="onEditClicked('infraobjects')"></button>
         </td>
       </tr>
+      <!--<tr *ngFor="let infraObject of selectedDataset.infraObjects">-->
+      <!--<td>infraobject</td>-->
+      <!--<td>{{infraObject.infraLabel}} ({{infraObject.start | number : '1.1-1'}}-{{infraObject.end | number :-->
+      <!--'1.1-1'}})-->
+      <!--</td>-->
+      <!--</tr>-->
       </tbody>
     </table>
   </div>

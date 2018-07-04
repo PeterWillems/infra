@@ -34,7 +34,8 @@
           <br>
           <app-dataset-details *ngIf="selectedDataset"
                                [selectedDataset]="selectedDataset" [projects]="projects" [organisations]="organisations"
-                               [persons]="persons" [topics]="topics" [decimalSymbols]="decimalSymbols"
+                               [persons]="persons" [topics]="topics" [infraObjects]="infraObjects"
+                               [quantities]="quantities" [decimalSymbols]="decimalSymbols"
                                [separators]="separators" [formats]="formats"
                                (update)="onUpdate($event)"></app-dataset-details>
         </div>

@@ -6,6 +6,8 @@ import {Project} from './models/project.model';
 import {Organisation} from './models/organisation.model';
 import {Topic} from './models/topic.model';
 import {Person} from './models/person.model';
+import {Quantity} from './models/quantity.model';
+import {InfraObject} from './models/infraobject.model';
 
 @Injectable()
 export class DatasetService {
@@ -38,6 +40,14 @@ export class DatasetService {
 
   getTopics(): Observable<Array<Topic>> {
     return this._httpClient.get<Array<Topic>>(this.apiAddress + '/topics');
+  }
+
+  getInfraObjects(): Observable<Array<InfraObject>> {
+    return this._httpClient.get<Array<InfraObject>>(this.apiAddress + '/infra-objects');
+  }
+
+  getQuantities(): Observable<Array<Quantity>> {
+    return this._httpClient.get<Array<Quantity>>(this.apiAddress + '/quantities');
   }
 
   getDecimalSymbols(): Observable<Array<string>> {

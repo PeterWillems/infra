@@ -9,6 +9,8 @@ import {Project} from '../models/project.model';
 import {Organisation} from '../models/organisation.model';
 import {Topic} from '../models/topic.model';
 import {Person} from '../models/person.model';
+import {Quantity} from '../models/quantity.model';
+import {InfraObject} from '../models/infraobject.model';
 
 @Component({
   selector: 'app-datasets',
@@ -26,6 +28,8 @@ export class DatasetsComponent implements OnInit {
   organisations: Array<Organisation>;
   persons: Array<Person>;
   topics: Array<Topic>;
+  infraObjects: Array<InfraObject>;
+  quantities: Array<Quantity>;
   decimalSymbols: string[];
   separators: string[];
   formats: string[];
@@ -59,6 +63,14 @@ export class DatasetsComponent implements OnInit {
     const topics$: Observable<Array<Topic>> = this._datasetService.getTopics();
     topics$.subscribe(value => {
       this.topics = value;
+    });
+    const infraObjects$: Observable<Array<InfraObject>> = this._datasetService.getInfraObjects();
+    infraObjects$.subscribe(value => {
+      this.infraObjects = value;
+    });
+    const quantities$: Observable<Array<Quantity>> = this._datasetService.getQuantities();
+    quantities$.subscribe(value => {
+      this.quantities = value;
     });
     const decimalSymbols$: Observable<Array<string>> = this._datasetService.getDecimalSymbols();
     decimalSymbols$.subscribe(value => {
