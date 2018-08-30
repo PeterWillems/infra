@@ -28,7 +28,20 @@
                 <td align="right">{{infraObject.start | number : '1.1-1'}}</td>
                 <td align="right">{{infraObject.end | number : '1.1-1'}}</td>
               </tr>
+              <tr *ngIf="dataset.infraObjects.length===0" (click)="show(dataset)">
+                <td>{{dataset.datasetLabel}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
             </ng-container>
+            <tr>
+              <td colspan="6">
+                <button class="btn btn-default btn-sm fa fa-asterisk" (click)="createDataset()"></button>
+              </td>
+            </tr>
             </tbody>
           </table>
           <br>

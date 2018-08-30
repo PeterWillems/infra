@@ -17,12 +17,10 @@ import {DirectionPipe} from './roadsection-list/selected-roadsection/direction.p
 import {KilometryPipe} from './roadsection-list/selected-roadsection/kilometry.pipe';
 import {DistancePipe} from './roadsection-list/selected-roadsection/distance.pipe';
 import {JunctionPipe} from './roadsection-list/selected-roadsection/junction.pipe';
-import { DatasetsComponent } from './datasets/datasets.component';
-import { HomeComponent } from './home/home.component';
-import { DatasetDetailsComponent } from './datasets/dataset-details/dataset-details.component';
+import {DatasetsComponent} from './datasets/datasets.component';
+import {DatasetDetailsComponent} from './datasets/dataset-details/dataset-details.component';
 
 const appRoutes: Routes = [
-  {path: 'home', component: HomeComponent},
   {path: 'selection', component: RoadsectionSelectionComponent},
   {path: 'datasets', component: DatasetsComponent},
   {path: '', redirectTo: '/home', pathMatch: 'full'}
@@ -42,7 +40,6 @@ const appRoutes: Routes = [
     DistancePipe,
     JunctionPipe,
     DatasetsComponent,
-    HomeComponent,
     DatasetDetailsComponent
   ],
   imports: [

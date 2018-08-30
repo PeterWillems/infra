@@ -3,6 +3,7 @@ import {RoadsectionService} from '../roadsection.service';
 import {RoadsectionModel} from '../models/roadsection.model';
 import {DrivewaySubtypeModel} from '../models/drivewaySubtype.model';
 import {RoadsectionSelection} from '../models/roadsection-selection.model';
+import {TimeIntervalSelection} from '../models/time-interval-selection.model';
 
 @Component({
   selector: 'app-roadsection-selection',
@@ -20,11 +21,13 @@ export class RoadsectionSelectionComponent implements OnInit {
   drivewaySubtypes: Array<DrivewaySubtypeModel>;
   roadNumbers: string[];
   roadsectionSelection: RoadsectionSelection;
+  timeIntervalSelection: TimeIntervalSelection;
   loading: string;
 
   constructor(private _roadsectionService: RoadsectionService) {
     this.roadNumbers = [];
     this.roadsectionSelection = new RoadsectionSelection();
+    this.timeIntervalSelection = new TimeIntervalSelection();
   }
 
   ngOnInit() {
@@ -66,9 +69,14 @@ export class RoadsectionSelectionComponent implements OnInit {
     // }
   }
 
-  toggleChecked(label: string) {
+  toggleCheckedRoadsectionSelection(label: string) {
     this.roadsectionSelection.active[label] = !this.roadsectionSelection.active[label];
   }
+
+  toggleCheckedTimeIntervalSelection(label: string) {
+    this.timeIntervalSelection.active[label] = !this.timeIntervalSelection.active[label];
+  }
+
 
   toggleDirection() {
     this.roadsectionSelection.direction = !this.roadsectionSelection.direction;
@@ -77,6 +85,10 @@ export class RoadsectionSelectionComponent implements OnInit {
   onSelectedRoadsectionChange(roadsection: RoadsectionModel): void {
     console.log('onSelectedRoadsectionChange: ' + roadsection.id);
     this.selectedRoadsection = roadsection;
+  }
+
+  onSelectedRoadsectionToggled(roadsection: RoadsectionModel): void {
+    this.selectedRoadsection.selected = !this.selectedRoadsection.selected;
   }
 
   onZoomInChange(roadsection: RoadsectionModel): void {

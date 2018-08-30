@@ -13,6 +13,8 @@ import {InfraObject} from './models/infraobject.model';
 export class DatasetService {
   apiAddress: string;
   updatedDataset = new EventEmitter<Dataset>();
+  createdDataset = new EventEmitter<Dataset>();
+  createdInfraObject = new EventEmitter<InfraObject>();
 
   constructor(private _httpClient: HttpClient) {
     this.apiAddress = 'http://localhost:8080';
@@ -20,6 +22,10 @@ export class DatasetService {
 
   getDatasets(): Observable<Array<Dataset>> {
     return this._httpClient.get<Array<Dataset>>(this.apiAddress + '/datasets');
+  }
+
+  createDataset(): void {
+    this._httpClient.post<Dataset>(this.apiAddress + '/datasets', null).subscribe((value) => this.createdDataset.emit(value));
   }
 
   getDataset(dataset: Dataset): Observable<Dataset> {
@@ -44,6 +50,13 @@ export class DatasetService {
 
   getInfraObjects(): Observable<Array<InfraObject>> {
     return this._httpClient.get<Array<InfraObject>>(this.apiAddress + '/infra-objects');
+  }
+
+  createInfraObject(): void {
+    this._httpClient.post<InfraObject>(this.apiAddress + '/infra-objects', null).subscribe((value) => {
+      console.log('createInfraobject: ' + value.label);
+      this.createdInfraObject.emit(value);
+    });
   }
 
   getQuantities(): Observable<Array<Quantity>> {

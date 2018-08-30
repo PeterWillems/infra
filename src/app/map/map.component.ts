@@ -18,6 +18,7 @@ export class MapComponent implements OnInit, OnChanges {
   @Input() selectedRoadsection: RoadsectionModel;
   @Output() selectedRoadsectionChanged: EventEmitter<RoadsectionModel> = new EventEmitter<RoadsectionModel>();
   @Output() selectedDatasetChanged: EventEmitter<string> = new EventEmitter<string>();
+  @Output() selectedRoadsectionToggled: EventEmitter<RoadsectionModel> = new EventEmitter<RoadsectionModel>();
   @Output() showOverview: EventEmitter<string> = new EventEmitter<string>();
   private _datasetLabel: string;
 
@@ -45,19 +46,31 @@ export class MapComponent implements OnInit, OnChanges {
 
   lineMouseOver(roadsection: RoadsectionModel, infoWindow: AgmInfoWindow, $event: PolyMouseEvent): void {
     if (!this.overview) {
-      this.mouseOverEvent = true;
-      const latLng = $event.latLng;
-      this.roadsection_infowindow_lng = latLng.lng();
-      this.roadsection_infowindow_lat = latLng.lat();
-      this.selectedRoadsection = roadsection;
-      infoWindow.open();
-      this.selectedRoadsectionChanged.emit(this.selectedRoadsection);
+      if (this.selectedRoadsection !== roadsection) {
+        this.mouseOverEvent = true;
+        const latLng = $event.latLng;
+        this.roadsection_infowindow_lng = latLng.lng();
+        this.roadsection_infowindow_lat = latLng.lat();
+        this.selectedRoadsection = roadsection;
+        infoWindow.open();
+        this.selectedRoadsectionChanged.emit(this.selectedRoadsection);
+      }
+    }
+  }
+
+  onInfoWindowClose(roadsection: RoadsectionModel) {
+    console.log('onInfoWindowClose');
+    if (roadsection === this.selectedRoadsection) {
+      this.selectedRoadsection = null;
     }
   }
 
   lineClick(roadsection: RoadsectionModel, dblClick: boolean): void {
     console.log('lineClick ' + roadsection.datasetLabel + ' dblClick: ' + dblClick);
     this.selectedDatasetChanged.emit(roadsection.datasetLabel);
+    if (dblClick) {
+      this.selectedRoadsectionToggled.emit(this.selectedRoadsection);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -16,7 +16,8 @@
             </thead>
             <tbody>
             <tr>
-              <td><input type="checkbox" [checked]="roadsectionSelection.active.road" (click)="toggleChecked('road')">
+              <td><input type="checkbox" [checked]="roadsectionSelection.active.road"
+                         (click)="toggleCheckedRoadsectionSelection('road')">
               </td>
               <td>weg ID:</td>
               <td>
@@ -28,7 +29,7 @@
             </tr>
             <tr>
               <td><input type="checkbox" [checked]="roadsectionSelection.active.direction"
-                         (click)="toggleChecked('direction')"></td>
+                         (click)="toggleCheckedRoadsectionSelection('direction')"></td>
               <td>richting:</td>
               <td>
                 <label class="radio-inline">
@@ -41,13 +42,14 @@
             </tr>
             <tr>
               <td><input type="checkbox" [checked]="roadsectionSelection.active.beginKm"
-                         (click)="toggleChecked('beginKm')"></td>
+                         (click)="toggleCheckedRoadsectionSelection('beginKm')"></td>
               <td>begin KM:</td>
               <td><input class="form-control" [(ngModel)]="roadsectionSelection.beginKm"
                          [disabled]="!roadsectionSelection.active.beginKm" type="number"></td>
             </tr>
             <tr>
-              <td><input type="checkbox" [checked]="roadsectionSelection.active.endKm" (click)="toggleChecked('endKm')">
+              <td><input type="checkbox" [checked]="roadsectionSelection.active.endKm"
+                         (click)="toggleCheckedRoadsectionSelection('endKm')">
               </td>
               <td>eind KM:</td>
               <td><input class="form-control" [(ngModel)]="roadsectionSelection.endKm"
@@ -55,7 +57,7 @@
             </tr>
             <tr>
               <td><input type="checkbox" [checked]="roadsectionSelection.active.drivewaySubtype"
-                         (click)="toggleChecked('drivewaySubtype')">
+                         (click)="toggleCheckedRoadsectionSelection('drivewaySubtype')">
               </td>
               <td>baansubsoort:</td>
               <select class="form-control" [(ngModel)]="roadsectionSelection.drivewaySubtype"
@@ -81,11 +83,44 @@
           </app-roadsection-list>
         </div>
       </div>
+      <div class="card border-primary">
+        <div class="card-header">
+          tijdvak selectie
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-sm">
+            <thead class="thead-light">
+            <tr>
+              <th>actief</th>
+              <th>parameter</th>
+              <th>waarde</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td><input type="checkbox" [checked]="timeIntervalSelection.active.start"
+                         (click)="toggleCheckedTimeIntervalSelection('start')"></td>
+              <td>start:</td>
+              <td><input type="date" class="form-control" [disabled]="!timeIntervalSelection.active.start"
+                         [value]="timeIntervalSelection.start.toISOString().substring(0,10)"></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" [checked]="timeIntervalSelection.active.end"
+                         (click)="toggleCheckedTimeIntervalSelection('end')"></td>
+              <td>eind:</td>
+              <td><input type="date" class="form-control" [disabled]="!timeIntervalSelection.active.end"
+                         [value]="timeIntervalSelection.end.toISOString().substring(0,10)"></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
     <div class="col-md-9 column-content">
       <app-map [map_lat]="map_lat" [map_lng]="map_lng" [maptype]="maptype" [roadsections]="roadsections"
                [fitBounds]="fitBounds" [selectedRoadsection]="selectedRoadsection"
-               (selectedRoadsectionChanged)="onSelectedRoadsectionChange($event)"></app-map>
+               (selectedRoadsectionChanged)="onSelectedRoadsectionChange($event)"
+               (selectedRoadsectionToggled)="onSelectedRoadsectionToggled($event)"></app-map>
     </div>
   </div>
 </div>

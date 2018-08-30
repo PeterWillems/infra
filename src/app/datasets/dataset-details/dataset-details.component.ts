@@ -32,6 +32,7 @@ export class DatasetDetailsComponent implements OnInit {
   selectedNewInfraObject: InfraObject;
   selectableInfraObjects: InfraObject[];
   selectedFieldLabel: string;
+  private _infraObjectInEditMode: InfraObject;
 
   constructor(private _datasetService: DatasetService) {
   }
@@ -201,4 +202,20 @@ export class DatasetDetailsComponent implements OnInit {
     this.selectableInfraObjects.push(infraobject);
   }
 
+  createInfraobject() {
+    const subscription = this._datasetService.createdInfraObject.subscribe((value) => {
+      console.log('createInfraobject: ' + value.label);
+      this.selectedDataset.infraObjects.push(value);
+      subscription.unsubscribe();
+    });
+    this._datasetService.createInfraObject();
+  }
+
+  editInfraobject(infraObject: InfraObject): void {
+    this._infraObjectInEditMode = this._infraObjectInEditMode ? null : infraObject;
+  }
+
+  inEditMode(infraObject: InfraObject): boolean {
+    return infraObject === this._infraObjectInEditMode;
+  }
 }

@@ -75,7 +75,7 @@
       <tr [ngClass]="isSelected('data reference')?'selected':''">
         <td>data reference</td>
         <td *ngIf="!isSelected('data reference')"><a href="{{selectedDataset.dataReference}}">
-          {{selectedDataset.dataReference.substring(selectedDataset.dataReference.lastIndexOf('/') + 1)}}
+          <span *ngIf="selectedDataset.dataReference">{{selectedDataset.dataReference.substring(selectedDataset.dataReference.lastIndexOf('/') + 1)}}</span>
         </a></td>
         <td *ngIf="isSelected('data reference')">
           <input class="form-control" type="text" [(ngModel)]="selectedDataset.dataReference"></td>
@@ -191,27 +191,73 @@
               <th>start</th>
               <th>end</th>
             </tr>
-            <tr *ngFor="let infraObject of selectedDataset.infraObjects">
-              <td>{{infraObject.road}}</td>
-              <td>{{infraObject.way}}</td>
-              <td>{{infraObject.lane}}</td>
-              <td>{{infraObject.start}}</td>
-              <td>{{infraObject.end}}</td>
-              <td>
-                <button class="btn btn-default btn-sm fa fa-trash" (click)="removeInfraobject(infraObject)"></button>
-              </td>
-            </tr>
+            <ng-container *ngFor="let infraObject of selectedDataset.infraObjects">
+              <tr *ngIf="!inEditMode(infraObject)">
+                <td>{{infraObject.road}}</td>
+                <td>{{infraObject.way}}</td>
+                <td>{{infraObject.lane}}</td>
+                <td>{{infraObject.start}}</td>
+                <td>{{infraObject.end}}</td>
+                <td>
+                  <button class="btn btn-default btn-sm fa fa-trash" (click)="removeInfraobject(infraObject)"></button>
+                </td>
+                <td>
+                  <button
+                    [class]="inEditMode(infraObject)?'btn btn-primary btn-sm fa fa-pencil':'btn btn-default btn-sm fa fa-pencil'"
+                    (click)="editInfraobject(infraObject)">
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="inEditMode(infraObject)">
+                <td colspan="5">
+                  <table>
+                    <tr>
+                      <td><label>road</label><input class="form-control" type="text" [(ngModel)]="infraObject.road">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><label>way</label><input class="form-control" type="text" [(ngModel)]="infraObject.way"></td>
+                    </tr>
+                    <tr>
+                      <td><label>lane</label><input class="form-control" type="text" [(ngModel)]="infraObject.lane">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><label>start</label><input class="form-control" type="number" [(ngModel)]="infraObject.start">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><label>end</label><input class="form-control" type="number" [(ngModel)]="infraObject.end">
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td>
+                  <button
+                    [class]="inEditMode(infraObject)?'btn btn-info btn-sm fa fa-pencil':'btn btn-default btn-sm fa fa-pencil'"
+                    (click)="editInfraobject(infraObject)">
+                  </button>
+                </td>
+
+              </tr>
+            </ng-container>
             <tr>
-              <td [attr.colspan]="5"><select class="form-control" [(ngModel)]="selectedNewInfraObject">
-                <option class="form-control" *ngFor="let selectableInfraObject of selectableInfraObjects"
-                        [ngValue]="selectableInfraObject">{{selectableInfraObject.label}}
-                </option>
-              </select></td>
+              <td [attr.colspan]="5"></td>
               <td>
-                <button class="btn btn-default btn-sm fa fa-plus" (click)="addInfraobject(selectedNewInfraObject)"
-                        [disabled]="!selectedNewInfraObject"></button>
+                <button class="btn btn-default btn-sm fa fa-asterisk" (click)="createInfraobject()"></button>
               </td>
             </tr>
+            <!--<tr>-->
+            <!--<td [attr.colspan]="5"><select class="form-control" [(ngModel)]="selectedNewInfraObject">-->
+            <!--<option class="form-control" *ngFor="let selectableInfraObject of selectableInfraObjects"-->
+            <!--[ngValue]="selectableInfraObject">{{selectableInfraObject.label}}-->
+            <!--</option>-->
+            <!--</select></td>-->
+            <!--<td>-->
+            <!--<button class="btn btn-default btn-sm fa fa-plus" (click)="addInfraobject(selectedNewInfraObject)"-->
+            <!--[disabled]="!selectedNewInfraObject"></button>-->
+            <!--</td>-->
+            <!--</tr>-->
           </table>
         </td>
         <td>
@@ -220,12 +266,6 @@
                   (click)="onEditClicked('infraobjects')"></button>
         </td>
       </tr>
-      <!--<tr *ngFor="let infraObject of selectedDataset.infraObjects">-->
-      <!--<td>infraobject</td>-->
-      <!--<td>{{infraObject.infraLabel}} ({{infraObject.start | number : '1.1-1'}}-{{infraObject.end | number :-->
-      <!--'1.1-1'}})-->
-      <!--</td>-->
-      <!--</tr>-->
       </tbody>
     </table>
   </div>

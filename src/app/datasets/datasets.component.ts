@@ -42,7 +42,15 @@ export class DatasetsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._datasetService.updatedDataset.subscribe((value) => this.selectedDataset = value);
+    this._datasetService.updatedDataset.subscribe((value) => {
+      for (let index = 0; this.datasets.length; index++) {
+        if (this.datasets[index].datasetUri === value.datasetUri) {
+          this.datasets[index] = value;
+          break;
+        }
+      }
+      this.selectedDataset = value;
+    });
     const datasets$: Observable<Array<Dataset>> = this._datasetService.getDatasets();
     datasets$.subscribe(value => {
       this.datasets = value;
@@ -119,6 +127,7 @@ export class DatasetsComponent implements OnInit {
   private _showAllDatasets() {
     if (!this.allRoadsections) {
       let numberOfDatasets = this.datasets.length;
+      console.log('_showAllDatasets/numberOfDatasets=' + numberOfDatasets);
       const subscription = this._roadsectionService.roadsectionsUpdated.subscribe(next => {
         const thisDataset = this.datasets[this.datasets.length - numberOfDatasets];
         console.log('_showAllDatasets ' + thisDataset.datasetLabel);
@@ -162,6 +171,7 @@ export class DatasetsComponent implements OnInit {
 
   onShowOverviewClicked(): void {
     this.selectedDataset = null;
+    this.allRoadsections = null;
     this._showAllDatasets();
   }
 
@@ -172,5 +182,13 @@ export class DatasetsComponent implements OnInit {
       this.selectedDataset = value;
       console.log('years: ' + this.selectedDataset.measurementYears);
     });
+  }
+
+  createDataset(): void {
+    const subscription = this._datasetService.createdDataset.subscribe((value) => {
+      this.datasets.push(value);
+      subscription.unsubscribe();
+    });
+    this._datasetService.createDataset();
   }
 }
