@@ -218,4 +218,13 @@ export class DatasetDetailsComponent implements OnInit {
   inEditMode(infraObject: InfraObject): boolean {
     return infraObject === this._infraObjectInEditMode;
   }
+
+  getMeasurementStartDate(): string {
+    return new Date(this.selectedDataset.measurementStartDate).toLocaleDateString();
+  }
+
+  getMeasurementEndDate(): string {
+    return new Date(this.selectedDataset.measurementEndDate).toLocaleDateString();
+  }
+
 }

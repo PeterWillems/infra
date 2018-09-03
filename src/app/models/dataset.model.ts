@@ -4,6 +4,8 @@ import {Quantity} from './quantity.model';
 export interface Dataset {
   datasetUri: string;
   datasetLabel: string;
+  measurementStartDate: number;
+  measurementEndDate: number;
   measurementYears: string[];
   dataReference: string;
   project: string;

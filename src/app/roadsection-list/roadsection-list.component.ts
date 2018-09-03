@@ -57,6 +57,18 @@ export class RoadsectionListComponent implements OnInit, OnChanges {
     this.zoomInChanged.emit(this.selectedRoadsection);
   }
 
+  selectAll(): void {
+    for (let i = 0; i < this.roadsections.length; i++) {
+      this.roadsections[i].selected = true;
+    }
+  }
+
+  deselectAll(): void {
+    for (let i = 0; i < this.roadsections.length; i++) {
+      this.roadsections[i].selected = false;
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.showClicked) {
       const selectedRoadsectionChange: SimpleChange = changes.selectedRoadsection;

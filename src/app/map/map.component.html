@@ -4,12 +4,14 @@
     <!--<agm-info-window>Hello World!</agm-info-window>-->
     <!--</agm-marker>-->
     <agm-polyline #polyline *ngFor="let roadsection of roadsections;trackBy: trackById"
-                  [strokeColor]="roadsection.selected?'#00FFFF':((roadsection == selectedRoadsection)?'#FFFF00':'#FF0000')"
+                  [strokeColor]="roadsection.selected?'#00FFFF':'#FF0000'"
+                  [strokeWeight]="(roadsection == selectedRoadsection)?'8':'4'"
                   (lineMouseOver)="lineMouseOver(roadsection, infoWindow, $event)"
                   (lineClick)="lineClick(roadsection, false)" (lineDblClick)="lineClick(roadsection, true)">
       <agm-info-window #infoWindow [latitude]="roadsection_infowindow_lat"
                        [longitude]="roadsection_infowindow_lng"
-                       [isOpen]="roadsection === selectedRoadsection" (infoWindowClose)="onInfoWindowClose(roadsection)">
+                       [isOpen]="roadsection === selectedRoadsection"
+                       (infoWindowClose)="onInfoWindowClose(roadsection)">
         {{roadsection.id}} {{roadsection.datasetLabel}}
       </agm-info-window>
       <agm-marker *ngIf="overview && isNextDatasetLabel(roadsection)" [label]="roadsection.datasetLabel"

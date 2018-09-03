@@ -21,6 +21,14 @@
                   [ngClass]="isSelected('dataset')?'selected':''" (click)="onEditClicked('dataset')"></button>
         </td>
       </tr>
+      <tr>
+        <td>measurement start date</td>
+        <td>{{getMeasurementStartDate()}}</td>
+      </tr>
+      <tr>
+        <td>measurement end date</td>
+        <td>{{getMeasurementEndDate()}}</td>
+      </tr>
       <tr [ngClass]="isSelected('measurement years')?'selected':''">
         <td>measurement years</td>
         <td *ngIf="!isSelected('measurement years')">{{selectedDataset.measurementYears}}</td>

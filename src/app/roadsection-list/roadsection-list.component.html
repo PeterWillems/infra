@@ -35,6 +35,10 @@
         </tbody>
       </table>
     </div>
+    <div *ngIf="roadsections">
+      <button class="btn btn-light" (click)="selectAll()">Select all</button>
+      <button class="btn btn-light" (click)="deselectAll()">Deselect all</button>
+    </div>
     <br>
     <app-selected-roadsection [selectedRoadsection]="selectedRoadsection"></app-selected-roadsection>
   </div>
