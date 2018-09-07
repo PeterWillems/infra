@@ -1,118 +1,167 @@
 <div class="container-fluid">
   <div class="row ">
     <div class="col-md-3 column-content left-column">
-      <div class="card border-primary">
-        <div class="card-header">
-          wegvak selectie
+      <div id="accordion">
+        <div class="card border-primary">
+          <div class="card-header" id="roadsectionSelection">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false"
+                      aria-controls="collapseOne">
+                wegvak selectie
+              </button>
+            </h5>
+          </div>
+          <div id="collapseOne" class="collapse" aria-labelledby="roadsectionSelection" data-parent="#accordion">
+            <div *ngIf="roadsectionSelection" class="card-body">
+              <table class="table table-bordered table-sm">
+                <thead class="thead-light">
+                <tr>
+                  <th>actief</th>
+                  <th>parameter</th>
+                  <th>waarde</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td><input type="checkbox" [checked]="roadsectionSelection.active.road"
+                             (click)="toggleCheckedRoadsectionSelection('road')">
+                  </td>
+                  <td>weg ID:</td>
+                  <td>
+                    <select class="form-control" [(ngModel)]="roadsectionSelection.road"
+                            [disabled]="!roadsectionSelection.active.road">
+                      <option class="form-control" *ngFor="let roadNumber of roadNumbers">{{roadNumber}}</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" [checked]="roadsectionSelection.active.direction"
+                             (click)="toggleCheckedRoadsectionSelection('direction')"></td>
+                  <td>richting:</td>
+                  <td>
+                    <label class="radio-inline">
+                      <input type="radio" name="direction" [disabled]="!roadsectionSelection.active.direction"
+                             [checked]="!roadsectionSelection.direction" (click)="toggleDirection()">links</label>
+                    <label class="radio-inline">
+                      <input type="radio" name="direction" [disabled]="!roadsectionSelection.active.direction"
+                             [checked]="roadsectionSelection.direction" (click)="toggleDirection()">rechts</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" [checked]="roadsectionSelection.active.beginKm"
+                             (click)="toggleCheckedRoadsectionSelection('beginKm')"></td>
+                  <td>begin KM:</td>
+                  <td><input class="form-control" [(ngModel)]="roadsectionSelection.beginKm"
+                             [disabled]="!roadsectionSelection.active.beginKm" type="number"></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" [checked]="roadsectionSelection.active.endKm"
+                             (click)="toggleCheckedRoadsectionSelection('endKm')">
+                  </td>
+                  <td>eind KM:</td>
+                  <td><input class="form-control" [(ngModel)]="roadsectionSelection.endKm"
+                             [disabled]="!roadsectionSelection.active.endKm" type="number"></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" [checked]="roadsectionSelection.active.drivewaySubtype"
+                             (click)="toggleCheckedRoadsectionSelection('drivewaySubtype')">
+                  </td>
+                  <td>baansubsoort:</td>
+                  <select class="form-control" [(ngModel)]="roadsectionSelection.drivewaySubtype"
+                          [disabled]="!roadsectionSelection.active.drivewaySubtype">
+                    <option class="form-control" *ngFor="let drivewaySubtype of drivewaySubtypes"
+                            [selected]="drivewaySubtype.drivewaySubtypeCode==roadsectionSelection.drivewaySubtype">
+                      {{drivewaySubtype.drivewaySubtypeCode}}
+                    </option>
+                  </select>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <button class="btn btn-primary" (click)="getRoad()">select</button>
+                  </td>
+                  <td>{{loading}}</td>
+                </tr>
+                </tbody>
+              </table>
+              <br>
+              <app-roadsection-list [roadsections]="roadsections" [selectedRoadsection]="selectedRoadsection"
+                                    (selectedRoadsectionChanged)="onSelectedRoadsectionChange($event)"
+                                    (zoomInChanged)="onZoomInChange($event)">
+              </app-roadsection-list>
+            </div>
+          </div>
         </div>
-        <div *ngIf="roadsectionSelection" class="card-body">
-          <table class="table table-bordered table-sm">
-            <thead class="thead-light">
-            <tr>
-              <th>actief</th>
-              <th>parameter</th>
-              <th>waarde</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><input type="checkbox" [checked]="roadsectionSelection.active.road"
-                         (click)="toggleCheckedRoadsectionSelection('road')">
-              </td>
-              <td>weg ID:</td>
-              <td>
-                <select class="form-control" [(ngModel)]="roadsectionSelection.road"
-                        [disabled]="!roadsectionSelection.active.road">
-                  <option class="form-control" *ngFor="let roadNumber of roadNumbers">{{roadNumber}}</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" [checked]="roadsectionSelection.active.direction"
-                         (click)="toggleCheckedRoadsectionSelection('direction')"></td>
-              <td>richting:</td>
-              <td>
-                <label class="radio-inline">
-                  <input type="radio" name="direction" [disabled]="!roadsectionSelection.active.direction"
-                         [checked]="!roadsectionSelection.direction" (click)="toggleDirection()">links</label>
-                <label class="radio-inline">
-                  <input type="radio" name="direction" [disabled]="!roadsectionSelection.active.direction"
-                         [checked]="roadsectionSelection.direction" (click)="toggleDirection()">rechts</label>
-              </td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" [checked]="roadsectionSelection.active.beginKm"
-                         (click)="toggleCheckedRoadsectionSelection('beginKm')"></td>
-              <td>begin KM:</td>
-              <td><input class="form-control" [(ngModel)]="roadsectionSelection.beginKm"
-                         [disabled]="!roadsectionSelection.active.beginKm" type="number"></td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" [checked]="roadsectionSelection.active.endKm"
-                         (click)="toggleCheckedRoadsectionSelection('endKm')">
-              </td>
-              <td>eind KM:</td>
-              <td><input class="form-control" [(ngModel)]="roadsectionSelection.endKm"
-                         [disabled]="!roadsectionSelection.active.endKm" type="number"></td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" [checked]="roadsectionSelection.active.drivewaySubtype"
-                         (click)="toggleCheckedRoadsectionSelection('drivewaySubtype')">
-              </td>
-              <td>baansubsoort:</td>
-              <select class="form-control" [(ngModel)]="roadsectionSelection.drivewaySubtype"
-                      [disabled]="!roadsectionSelection.active.drivewaySubtype">
-                <option class="form-control" *ngFor="let drivewaySubtype of drivewaySubtypes"
-                        [selected]="drivewaySubtype.drivewaySubtypeCode==roadsectionSelection.drivewaySubtype">
-                  {{drivewaySubtype.drivewaySubtypeCode}}
-                </option>
-              </select>
-            </tr>
-            <tr>
-              <td colspan="2">
-                <button class="btn btn-primary" (click)="getRoad()">select</button>
-              </td>
-              <td>{{loading}}</td>
-            </tr>
-            </tbody>
-          </table>
-          <br>
-          <app-roadsection-list [roadsections]="roadsections" [selectedRoadsection]="selectedRoadsection"
-                                (selectedRoadsectionChanged)="onSelectedRoadsectionChange($event)"
-                                (zoomInChanged)="onZoomInChange($event)">
-          </app-roadsection-list>
+        <div class="card border-primary">
+          <div class="card-header" id="timeIntervalSelection">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false"
+                      aria-controls="collapseTwo">
+                tijdvak selectie
+              </button>
+            </h5>
+          </div>
+          <div id="collapseTwo" class="collapse" aria-labelledby="timeIntervalSelection" data-parent="#accordion">
+            <div class="card-body">
+              <table class="table table-bordered table-sm">
+                <thead class="thead-light">
+                <tr>
+                  <th>actief</th>
+                  <th>parameter</th>
+                  <th>waarde</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td><input type="checkbox" [checked]="timeIntervalSelection.active.start"
+                             (click)="toggleCheckedTimeIntervalSelection('start')"></td>
+                  <td>start:</td>
+                  <td><input type="date" class="form-control" [disabled]="!timeIntervalSelection.active.start"
+                             [value]="timeIntervalSelection.start.toISOString().substring(0,10)"></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" [checked]="timeIntervalSelection.active.end"
+                             (click)="toggleCheckedTimeIntervalSelection('end')"></td>
+                  <td>eind:</td>
+                  <td><input type="date" class="form-control" [disabled]="!timeIntervalSelection.active.end"
+                             [value]="timeIntervalSelection.end.toISOString().substring(0,10)"></td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="card border-primary">
-        <div class="card-header">
-          tijdvak selectie
-        </div>
-        <div class="card-body">
-          <table class="table table-bordered table-sm">
-            <thead class="thead-light">
-            <tr>
-              <th>actief</th>
-              <th>parameter</th>
-              <th>waarde</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td><input type="checkbox" [checked]="timeIntervalSelection.active.start"
-                         (click)="toggleCheckedTimeIntervalSelection('start')"></td>
-              <td>start:</td>
-              <td><input type="date" class="form-control" [disabled]="!timeIntervalSelection.active.start"
-                         [value]="timeIntervalSelection.start.toISOString().substring(0,10)"></td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" [checked]="timeIntervalSelection.active.end"
-                         (click)="toggleCheckedTimeIntervalSelection('end')"></td>
-              <td>eind:</td>
-              <td><input type="date" class="form-control" [disabled]="!timeIntervalSelection.active.end"
-                         [value]="timeIntervalSelection.end.toISOString().substring(0,10)"></td>
-            </tr>
-            </tbody>
-          </table>
+        <div class="card border-primary">
+          <div class="card-header" id="topicSelection">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false"
+                      aria-controls="collapseTwo">
+                topic selectie
+              </button>
+            </h5>
+          </div>
+          <div id="collapseThree" class="collapse" aria-labelledby="topicSelection" data-parent="#accordion">
+            <div class="card-body">
+              <table class="table table-bordered table-sm">
+                <thead class="thead-light">
+                <tr>
+                  <th>actief</th>
+                  <th>parameter</th>
+                  <th>waarde</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td><input type="checkbox" [checked]="topicSelection.active.topic" (click)="toggleCheckedTopicSelection('topic')"></td>
+                  <td>topic:</td>
+                  <td><select class="form-control" [(ngModel)]="topicSelection.selectedTopic" [disabled]="!topicSelection.active.topic">
+                    <option class="form-control" *ngFor="let topic of topics" [ngValue]="topic.uri">{{topic.label}}
+                    </option>
+                  </select></td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>

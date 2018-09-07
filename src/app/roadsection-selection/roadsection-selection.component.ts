@@ -4,6 +4,9 @@ import {RoadsectionModel} from '../models/roadsection.model';
 import {DrivewaySubtypeModel} from '../models/drivewaySubtype.model';
 import {RoadsectionSelection} from '../models/roadsection-selection.model';
 import {TimeIntervalSelection} from '../models/time-interval-selection.model';
+import {TopicSelection} from '../models/topic-selection.model';
+import {Topic} from '../models/topic.model';
+import {DatasetService} from '../dataset.service';
 
 @Component({
   selector: 'app-roadsection-selection',
@@ -17,20 +20,28 @@ export class RoadsectionSelectionComponent implements OnInit {
   fitBounds: google.maps.LatLngBounds;
   roadsections: Array<RoadsectionModel>;
   selectedRoadsection: RoadsectionModel;
-
+  topics: Array<Topic>;
   drivewaySubtypes: Array<DrivewaySubtypeModel>;
   roadNumbers: string[];
   roadsectionSelection: RoadsectionSelection;
   timeIntervalSelection: TimeIntervalSelection;
+  topicSelection: TopicSelection;
   loading: string;
 
-  constructor(private _roadsectionService: RoadsectionService) {
+  constructor(private _roadsectionService: RoadsectionService, private _datasetService: DatasetService) {
+    console.log('RoadsectionSelectionComponent constructor');
     this.roadNumbers = [];
     this.roadsectionSelection = new RoadsectionSelection();
     this.timeIntervalSelection = new TimeIntervalSelection();
+    this.topicSelection = new TopicSelection();
   }
 
   ngOnInit() {
+    console.log('RoadsectionSelectionComponent ngOnInit');
+    this._datasetService.getTopics().subscribe(value => {
+      this.topics = value;
+    });
+
     this._roadsectionService.roadsectionsUpdated.subscribe((roadsections) => {
       console.log('Roadsections updated!');
       this.roadsections = roadsections;
@@ -75,6 +86,10 @@ export class RoadsectionSelectionComponent implements OnInit {
 
   toggleCheckedTimeIntervalSelection(label: string) {
     this.timeIntervalSelection.active[label] = !this.timeIntervalSelection.active[label];
+  }
+
+  toggleCheckedTopicSelection(label: string) {
+    this.topicSelection.active[label] = !this.topicSelection.active[label];
   }
 
 

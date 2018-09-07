@@ -19,11 +19,12 @@ import {DistancePipe} from './roadsection-list/selected-roadsection/distance.pip
 import {JunctionPipe} from './roadsection-list/selected-roadsection/junction.pipe';
 import {DatasetsComponent} from './datasets/datasets.component';
 import {DatasetDetailsComponent} from './datasets/dataset-details/dataset-details.component';
+import {DatasetService} from './dataset.service';
 
 const appRoutes: Routes = [
   {path: 'selection', component: RoadsectionSelectionComponent},
   {path: 'datasets', component: DatasetsComponent},
-  {path: '', redirectTo: '/home', pathMatch: 'full'}
+  {path: '', redirectTo: '/selection', pathMatch: 'full'}
 ];
 
 
@@ -49,7 +50,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     AgmCoreModule.forRoot({apiKey: 'AIzaSyBcGhouUAT-rUVh7xrAKcVHuicHlsPbJ_M'})
   ],
-  providers: [RoadsectionService],
+  providers: [RoadsectionService, DatasetService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
