@@ -12,3 +12,12 @@ agm-map {
   height: 850px;
   overflow-y: auto;
 }
+
+#select-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.table-record {
+  cursor: pointer;
+}

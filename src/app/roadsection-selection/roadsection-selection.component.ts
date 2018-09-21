@@ -7,6 +7,8 @@ import {TimeIntervalSelection} from '../models/time-interval-selection.model';
 import {TopicSelection} from '../models/topic-selection.model';
 import {Topic} from '../models/topic.model';
 import {DatasetService} from '../dataset.service';
+import {DatasetQuery} from '../models/datasetQuery.model';
+import {Dataset} from '../models/dataset.model';
 
 @Component({
   selector: 'app-roadsection-selection',
@@ -27,6 +29,7 @@ export class RoadsectionSelectionComponent implements OnInit {
   timeIntervalSelection: TimeIntervalSelection;
   topicSelection: TopicSelection;
   loading: string;
+  queriedDatasets: Dataset[];
 
   constructor(private _roadsectionService: RoadsectionService, private _datasetService: DatasetService) {
     console.log('RoadsectionSelectionComponent constructor');
@@ -66,18 +69,6 @@ export class RoadsectionSelectionComponent implements OnInit {
       this.roadsectionSelection.active.beginKm ? this.roadsectionSelection.beginKm : undefined,
       this.roadsectionSelection.active.endKm ? this.roadsectionSelection.endKm : undefined,
       this.roadsectionSelection.active.drivewaySubtype ? this.roadsectionSelection.drivewaySubtype : undefined);
-
-    // if (this.checked.id && !this.checked.right && !this.checked.beginKm && !this.checked.endKm && !this.checked.drivewaySubtype) {
-    //   this._roadsectionService.getRoadSections(this.roadId);
-    // } else if (this.checked.id && this.checked.right && !this.checked.beginKm && !this.checked.endKm && !this.checked.drivewaySubtype) {
-    //   this._roadsectionService.getRoadSections(this.roadId, this.right);
-    // } else if (this.checked.id && this.checked.right && this.checked.beginKm && !this.checked.endKm && !this.checked.drivewaySubtype) {
-    //   this._roadsectionService.getRoadSections(this.roadId, this.right, this.beginKm);
-    // } else if (this.checked.id && this.checked.right && this.checked.beginKm && this.checked.endKm && !this.checked.drivewaySubtype) {
-    //   this._roadsectionService.getRoadSections(this.roadId, this.right, this.beginKm, this.endKm);
-    // } else {
-    //   this._roadsectionService.getRoadSections(this.roadId, this.right, this.beginKm, this.endKm, this.drivewaySubtypeCode);
-    // }
   }
 
   toggleCheckedRoadsectionSelection(label: string) {
@@ -85,7 +76,23 @@ export class RoadsectionSelectionComponent implements OnInit {
   }
 
   toggleCheckedTimeIntervalSelection(label: string) {
-    this.timeIntervalSelection.active[label] = !this.timeIntervalSelection.active[label];
+    switch (label) {
+      case 'start':
+        this.timeIntervalSelection.active['start'] = !this.timeIntervalSelection.active['start'];
+        break;
+      case 'end':
+        this.timeIntervalSelection.active['end'] = !this.timeIntervalSelection.active['end'];
+        break;
+      default:
+        if (this.timeIntervalSelection.active['start'] || this.timeIntervalSelection.active['end']) {
+          this.timeIntervalSelection.active['start'] = false;
+          this.timeIntervalSelection.active['end'] = false;
+        } else {
+          this.timeIntervalSelection.active['start'] = true;
+          this.timeIntervalSelection.active['end'] = true;
+        }
+        break;
+    }
   }
 
   toggleCheckedTopicSelection(label: string) {
@@ -142,5 +149,78 @@ export class RoadsectionSelectionComponent implements OnInit {
     this.fitBounds.extend(minLatLng);
     this.fitBounds.extend(maxLatLng);
     console.log('fitBounds: ' + this.fitBounds.toString());
+  }
+
+  timeIntervalEndChanged(event) {
+    console.log('timeIntervalEndChanged: ' + event);
+    this.timeIntervalSelection.end = new Date(event);
+  }
+
+  timeIntervalStartChanged(event) {
+    console.log('timeIntervalStartChanged: ' + event);
+    this.timeIntervalSelection.start = new Date(event);
+  }
+
+  selectDatasets(): void {
+    document.getElementById('collapseOne').setAttribute('class', 'collapse');
+    document.getElementById('collapseTwo').setAttribute('class', 'collapse');
+    document.getElementById('collapseThree').setAttribute('class', 'collapse');
+
+    this.queriedDatasets = null;
+    const datasetQuery = new DatasetQuery();
+    if (this.roadsectionSelection.active.road) {
+      datasetQuery.roadNumber = 'R' + this.roadsectionSelection.road;
+      datasetQuery.roadSectionIds = [];
+      for (let i = 0; i < this.roadsections.length; i++) {
+        if (this.roadsections[i].selected) {
+          datasetQuery.roadSectionIds.push(this.roadsections[i].id);
+        }
+      }
+    }
+    if (this.timeIntervalSelection.active.start) {
+      console.log('timeIntervalSelection.start: ' + this.timeIntervalSelection.start + ' ' + this.timeIntervalSelection.start.valueOf());
+      datasetQuery.startDate = this.timeIntervalSelection.start.valueOf();
+    }
+    if (this.timeIntervalSelection.active.end) {
+      console.log('timeIntervalSelection.end: ' + this.timeIntervalSelection.end + ' ' + this.timeIntervalSelection.end.valueOf());
+      datasetQuery.endDate = this.timeIntervalSelection.end.valueOf();
+    }
+    if (this.topicSelection.active.topic) {
+      console.log('topicSelection.topic: ' + this.topicSelection.selectedTopic);
+      datasetQuery.topics = [this.topicSelection.selectedTopic.uri];
+    }
+    this._datasetService.queryDatasets(datasetQuery).subscribe(datasets => {
+      this.queriedDatasets = datasets;
+      console.log('Select Datatsets: ' + datasets.length);
+      let tempRoadsections = <RoadsectionModel[]>[];
+      let iterations = datasets.length;
+      const subscription = this._roadsectionService.roadsectionsUpdated.subscribe(() => {
+        tempRoadsections = tempRoadsections.concat(this._roadsectionService.roadsections);
+        iterations--;
+        console.log('iterations: ' + iterations + ' roadsections size: ' + this._roadsectionService.roadsections.length + ' tempRoadsections size: ' + tempRoadsections.length);
+        if (iterations === 0) {
+          this.roadsections = tempRoadsections;
+          this.calculateBounds(this.roadsections);
+          subscription.unsubscribe();
+        }
+      });
+      for (let i = 0; i < datasets.length; i++) {
+        console.log(datasets[i].datasetLabel);
+        this._showDataset(datasets[i]);
+      }
+    });
+  }
+
+  private _showDataset(dataset: Dataset): void {
+    if (dataset.infraObjects && dataset.infraObjects.length > 0) {
+      const infraObject = dataset.infraObjects[0];
+      if (infraObject.start > infraObject.end) {
+        this._roadsectionService.getRoadSections(dataset.datasetLabel, infraObject.road.substring(1), infraObject.way.endsWith('R'),
+          infraObject.end, infraObject.start, 'HR');
+      } else {
+        this._roadsectionService.getRoadSections(dataset.datasetLabel, infraObject.road.substring(1), infraObject.way.endsWith('R'),
+          infraObject.start, infraObject.end, 'HR');
+      }
+    }
   }
 }

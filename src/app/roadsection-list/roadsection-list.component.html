@@ -1,6 +1,6 @@
 <div class="card border-primary">
   <div class="card-header">
-    geselecteerde wegvakken
+    selected roadsections (nl: geselecteerde wegvakken)
   </div>
   <div class="card-body">
     <div *ngIf="roadsections" class="component">
@@ -8,16 +8,16 @@
         <thead class="thead-light">
         <tr>
           <th></th>
-          <th class="column-header" (click)="sortData('id')">wegvak ID
+          <th class="column-header" (click)="sortData('id')">roadsection ID
             <div [ngClass]="getSortClass('id')"></div>
           </th>
-          <th class="column-header" (click)="sortData('beginKilometer')">begin KM
+          <th class="column-header" (click)="sortData('beginKilometer')">start KM
             <div [ngClass]="getSortClass('beginKilometer')"></div>
           </th>
-          <th class="column-header" (click)="sortData('endKilometer')">eind KM
+          <th class="column-header" (click)="sortData('endKilometer')">end KM
             <div [ngClass]="getSortClass('endKilometer')"></div>
           </th>
-          <th class="column-header" (click)="sortData('drivewaySubtype')">baan subsoort
+          <th class="column-header" (click)="sortData('drivewaySubtype')">driveway class
             <div [ngClass]="getSortClass('drivewaySubtype')"></div>
           </th>
         </tr>

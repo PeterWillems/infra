@@ -85,18 +85,40 @@ export class MapComponent implements OnInit, OnChanges {
       }
     }
     this.mouseOverEvent = false;
+    const roadsectionChanges = changes['roadsections'];
+    if (roadsectionChanges && this.roadsections) {
+      const datasetLabels = [];
+      for (let i = 0; i < this.roadsections.length; i++) {
+        if (!datasetLabels.includes(this.roadsections[i].datasetLabel)) {
+          this.roadsections[i].hasLabel = true;
+          datasetLabels.push(this.roadsections[i].datasetLabel);
+        } else {
+          this.roadsections[i].hasLabel = false;
+        }
+      }
+    }
   }
 
   isNextDatasetLabel(roadsection: RoadsectionModel): boolean {
-    if (!this._datasetLabel) {
-      this._datasetLabel = roadsection.datasetLabel;
-      return true;
-    }
-    if (roadsection.datasetLabel === this._datasetLabel) {
-      return false;
-    }
-    this._datasetLabel = roadsection.datasetLabel;
-    return true;
+    //   if (this._datasetLabels.get(roadsection.datasetLabel)) {
+    //     return false;
+    //   } else {
+    //     this._datasetLabels.set(roadsection.datasetLabel, true);
+    //     return true;
+    //   }
+    //
+    //
+    //   // if (!this._datasetLabel) {
+    //   //   this._datasetLabel = roadsection.datasetLabel;
+    //   //   return true;
+    //   // }
+    //   // if (roadsection.datasetLabel === this._datasetLabel) {
+    //   //   return false;
+    //   // } else {
+    //   //   this._datasetLabel = roadsection.datasetLabel;
+    //   //   return true;
+    //   // }
+    return roadsection.hasLabel;
   }
 
   onShowOverviewClicked(): void {

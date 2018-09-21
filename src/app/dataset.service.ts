@@ -8,6 +8,7 @@ import {Topic} from './models/topic.model';
 import {Person} from './models/person.model';
 import {Quantity} from './models/quantity.model';
 import {InfraObject} from './models/infraobject.model';
+import {DatasetQuery} from './models/datasetQuery.model';
 
 @Injectable()
 export class DatasetService {
@@ -22,6 +23,10 @@ export class DatasetService {
 
   getDatasets(): Observable<Array<Dataset>> {
     return this._httpClient.get<Array<Dataset>>(this.apiAddress + '/datasets');
+  }
+
+  queryDatasets(datasetQuery: DatasetQuery): Observable<Array<Dataset>> {
+    return this._httpClient.post<Array<Dataset>>(this.apiAddress + '/datasets/query', datasetQuery);
   }
 
   createDataset(): void {

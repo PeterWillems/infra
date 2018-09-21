@@ -1,14 +1,14 @@
 <div *ngIf="selectedRoadsection" class="component">
   <div class="card border-primary">
     <div class="card-header">
-      geselecteerd wegvak {{selectedRoadsection.id}}
+      selected roadsection {{selectedRoadsection.id}}
     </div>
     <div class="card-body">
       <table class="table table-hover table-bordered table-condensed table-sm">
         <thead class="thead-light">
         <tr>
-          <th>attribuut</th>
-          <th>waarde</th>
+          <th>attribute</th>
+          <th>value</th>
         </tr>
         </thead>
         <tbody>
@@ -17,51 +17,51 @@
           <td>{{selectedRoadsection.id}}</td>
         </tr>
         <tr>
-          <td>weg</td>
+          <td>road</td>
           <td>{{'R' + selectedRoadsection.roadNumber}}</td>
         </tr>
         <tr>
-          <td>begin KM</td>
+          <td>start KM</td>
           <td>{{selectedRoadsection.beginKilometer | number : '1.3-3' | kilometry}}</td>
         </tr>
         <tr>
-          <td>eind KM</td>
+          <td>end KM</td>
           <td>{{selectedRoadsection.endKilometer | number : '1.3-3' | kilometry}}</td>
         </tr>
         <tr>
-          <td>beginafstand</td>
+          <td>start distance</td>
           <td>{{selectedRoadsection.beginDistance | distance}}</td>
         </tr>
         <tr>
-          <td>eindafstand</td>
+          <td>end distance</td>
           <td>{{selectedRoadsection.endDistance | distance}}</td>
         </tr>
         <tr>
-          <td>beginjunctie</td>
+          <td>start junction</td>
           <td>{{selectedRoadsection.beginJunction | junction}}</td>
         </tr>
         <tr>
-          <td>eindjunctie</td>
+          <td>end junction</td>
           <td>{{selectedRoadsection.endJunction | junction}}</td>
         </tr>
         <tr>
-          <td>baan</td>
+          <td>driveway (nl: baan)</td>
           <td>{{selectedRoadsection.drivewaySubtype ? selectedRoadsection.drivewaySubtype.drivewaySubtypeCode :
             'null'}}
           </td>
         </tr>
         <tr>
-          <td>baanpositie</td>
+          <td>driveway position (nl: baanpositie)</td>
           <td>{{selectedRoadsection.drivewayPosition ? selectedRoadsection.drivewayPosition.drivewayPositionCode :
             'null'}}
           </td>
         </tr>
         <tr>
-          <td>admin. richting</td>
+          <td>admin. direction</td>
           <td>{{selectedRoadsection.administrativeDirection | direction}}</td>
         </tr>
         <tr>
-          <td>rijrichting</td>
+          <td>driving direction</td>
           <td>{{selectedRoadsection.drivingDirection | direction}}</td>
         </tr>
         <tr>
@@ -69,19 +69,19 @@
           <td>{{selectedRoadsection.hectoLetter}}</td>
         </tr>
         <tr>
-          <td>gemeente id</td>
+          <td>municipality id</td>
           <td>{{selectedRoadsection.municipalityId}}</td>
         </tr>
         <tr>
-          <td>gemeentenaam</td>
+          <td>municipality</td>
           <td>{{selectedRoadsection.municipalityName}}</td>
         </tr>
         <tr>
-          <td>straatnaam</td>
+          <td>street name</td>
           <td>{{selectedRoadsection.streetName}}</td>
         </tr>
         <tr>
-          <td>woonplaats</td>
+          <td>residence</td>
           <td>{{selectedRoadsection.residence}}</td>
         </tr>
         </tbody>
