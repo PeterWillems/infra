@@ -6,13 +6,16 @@ import {RoadsectionModel} from './models/roadsection.model';
 import {} from '@types/googlemaps';
 import {DrivewaySubtypeModel} from './models/drivewaySubtype.model';
 import LatLngBounds = google.maps.LatLngBounds;
+import {CivilstructureModel} from './models/civilstructure.model';
 
 @Injectable()
 export class RoadsectionService {
   apiAddress: string;
   roadsections: Array<RoadsectionModel>;
+  civilstructures: Array<CivilstructureModel>
   roadsectionsGeometry: Array<GeometryModel> = [];
   roadsectionsUpdated = new EventEmitter();
+  civilstructuresUpdated = new EventEmitter();
   geometryUpdated = new EventEmitter();
   loadingUpdated = new EventEmitter();
   loading: string;
@@ -126,5 +129,45 @@ export class RoadsectionService {
 
   getDrivewaySubtypes(): Observable<Array<DrivewaySubtypeModel>> {
     return this._httpClient.get<Array<DrivewaySubtypeModel>>(this.apiAddress + '/roadsections/drivewaysubtypes');
+  }
+
+  getCivilStructures(datasetLabel: string,
+                     roadId?: string,
+                     direction?: boolean,
+                     beginKm?: number,
+                     endKm?: number): void {
+    console.log('Loading ...' + datasetLabel);
+    this.loading = 'Loading ...';
+    this.loadingUpdated.emit(this.loading);
+    let civilstructures: Array<CivilstructureModel> = [];
+    const roadIdPresent = (roadId !== undefined);
+    const directionPresent = (direction !== undefined);
+    const beginKmPresent = (beginKm !== undefined);
+    const endKmPresent = (endKm !== undefined);
+    const anyParameters = roadIdPresent || directionPresent || beginKmPresent || endKmPresent;
+    const request = this.apiAddress + '/civilstructures' + (anyParameters ? '?' : '')
+      + (roadIdPresent ? ('road=' + roadId) : '')
+      + (directionPresent ? ((roadIdPresent ? '&' : '')
+        + 'direction=' + direction) : '')
+      + (beginKmPresent ? ((roadIdPresent || directionPresent ? '&' : '')
+        + 'beginKilometer=' + beginKm) : '')
+      + (endKmPresent ? ((roadIdPresent || directionPresent || beginKmPresent ? '&' : '')
+        + 'endKilometer=' + endKm) : '');
+    console.log('request: ' + request);
+    const civilstructures$ =
+      this._httpClient.get<Array<CivilstructureModel>>(request);
+    civilstructures$.subscribe(value => {
+      civilstructures = value
+    }, error2 => {
+      console.log(error2);
+      this.loading = 'On error: ' + error2;
+      this.loadingUpdated.emit(this.loading);
+    }, () => {
+      this.civilstructures = civilstructures;
+      this.civilstructuresUpdated.emit(civilstructures);
+      console.log('Ready');
+      this.loading = 'Ready';
+      this.loadingUpdated.emit(this.loading);
+    });
   }
 }

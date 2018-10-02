@@ -219,12 +219,21 @@ export class DatasetDetailsComponent implements OnInit {
     return infraObject === this._infraObjectInEditMode;
   }
 
-  getMeasurementStartDate(): string {
-    return new Date(this.selectedDataset.measurementStartDate).toLocaleDateString();
+  getMeasurementStartDate(): Date {
+    return new Date(this.selectedDataset.measurementStartDate);
   }
 
-  getMeasurementEndDate(): string {
-    return new Date(this.selectedDataset.measurementEndDate).toLocaleDateString();
+  measurementStartDateChanged(event) {
+    this.selectedDataset.measurementStartDate = new Date(event).valueOf();
   }
+
+  getMeasurementEndDate(): Date {
+    return new Date(this.selectedDataset.measurementEndDate);
+  }
+
+  measurementEndDateChanged(event) {
+    this.selectedDataset.measurementEndDate = new Date(event).valueOf();
+  }
+
 
 }

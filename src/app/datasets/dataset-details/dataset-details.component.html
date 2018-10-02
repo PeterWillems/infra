@@ -21,13 +21,31 @@
                   [ngClass]="isSelected('dataset')?'selected':''" (click)="onEditClicked('dataset')"></button>
         </td>
       </tr>
-      <tr>
+      <tr [ngClass]="isSelected('measurement start date')?'selected':''">
         <td>measurement start date</td>
-        <td>{{getMeasurementStartDate()}}</td>
+        <td *ngIf="!isSelected('measurement start date')">{{getMeasurementStartDate() | date:'yyyy-MM-dd'}}</td>
+        <td *ngIf="isSelected('measurement start date')">
+          <input class="form-control" type="date"
+                 [ngModel]="getMeasurementStartDate() | date:'yyyy-MM-dd'"
+                 (ngModelChange)="measurementStartDateChanged($event)"></td>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('measurement start date')?'selected':''"
+                  (click)="onEditClicked('measurement start date')"></button>
+        </td>
       </tr>
-      <tr>
+      <tr [ngClass]="isSelected('measurement end date')?'selected':''">
         <td>measurement end date</td>
-        <td>{{getMeasurementEndDate()}}</td>
+        <td *ngIf="!isSelected('measurement end date')">{{getMeasurementEndDate() | date:'yyyy-MM-dd'}}</td>
+        <td *ngIf="isSelected('measurement end date')">
+          <input class="form-control" type="date"
+                 [ngModel]="getMeasurementEndDate() | date:'yyyy-MM-dd'"
+                 (ngModelChange)="measurementEndDateChanged($event)"></td>
+        <td>
+          <button type="button" class="btn btn-default btn-sm fa fa-pencil"
+                  [ngClass]="isSelected('measurement end date')?'selected':''"
+                  (click)="onEditClicked('measurement end date')"></button>
+        </td>
       </tr>
       <tr [ngClass]="isSelected('measurement years')?'selected':''">
         <td>measurement years</td>

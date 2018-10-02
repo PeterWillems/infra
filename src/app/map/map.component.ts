@@ -2,6 +2,7 @@ import {Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges
 import {RoadsectionModel} from '../models/roadsection.model';
 import {AgmInfoWindow, PolyMouseEvent} from '@agm/core';
 import {LatLngBounds, Polyline} from '@agm/core/services/google-maps-types';
+import {CivilstructureModel} from '../models/civilstructure.model';
 
 @Component({
   selector: 'app-map',
@@ -15,7 +16,9 @@ export class MapComponent implements OnInit, OnChanges {
   @Input() overview = false;
   @Input() fitBounds: LatLngBounds;
   @Input() roadsections: Array<RoadsectionModel>;
+  @Input() civilstructures: Array<CivilstructureModel>;
   @Input() selectedRoadsection: RoadsectionModel;
+  @Input() selectedCivilstructure: CivilstructureModel;
   @Output() selectedRoadsectionChanged: EventEmitter<RoadsectionModel> = new EventEmitter<RoadsectionModel>();
   @Output() selectedDatasetChanged: EventEmitter<string> = new EventEmitter<string>();
   @Output() selectedRoadsectionToggled: EventEmitter<RoadsectionModel> = new EventEmitter<RoadsectionModel>();
@@ -26,6 +29,8 @@ export class MapComponent implements OnInit, OnChanges {
 
   roadsection_infowindow_lat = 52.07950281002701;
   roadsection_infowindow_lng = 4.392345417290926;
+  civilstructure_infowindow_lat = 52.07950281002701;
+  civilstructure_infowindow_lng = 4.392345417290926;
   mouseOverEvent = false;
 
 
@@ -55,6 +60,17 @@ export class MapComponent implements OnInit, OnChanges {
         infoWindow.open();
         this.selectedRoadsectionChanged.emit(this.selectedRoadsection);
       }
+    }
+  }
+
+  lineMouseOverCS(civilstructure: CivilstructureModel, infoWindow: AgmInfoWindow, $event: PolyMouseEvent): void {
+    if (this.selectedCivilstructure !== civilstructure) {
+      this.mouseOverEvent = true;
+      const latLng = $event.latLng;
+      this.civilstructure_infowindow_lng = latLng.lng();
+      this.civilstructure_infowindow_lat = latLng.lat();
+      this.selectedCivilstructure = civilstructure;
+      infoWindow.open();
     }
   }
 

@@ -3,6 +3,21 @@
     <!--<agm-marker [latitude]="map_lat" [longitude]="map_lng">-->
     <!--<agm-info-window>Hello World!</agm-info-window>-->
     <!--</agm-marker>-->
+    <agm-polyline *ngFor="let civilstructure of civilstructures"
+                  [strokeWeight]="10" [strokeColor]="'#777777'" [strokeOpacity]="0.75"
+                  (lineMouseOver)="lineMouseOverCS(civilstructure, infoWindowCS, $event)">
+      <agm-info-window #infoWindowCS [latitude]="civilstructure_infowindow_lat"
+                       [longitude]="civilstructure_infowindow_lng"
+                       [isOpen]="civilstructure === selectedCivilstructure">
+        {{civilstructure.inventOms}} [{{civilstructure.omschr}}]
+      </agm-info-window>
+      <div *ngIf="civilstructure.geometry">
+        <agm-polyline-point *ngFor="let point of civilstructure.geometry.multiLineString"
+                            [latitude]="point.coordinate.lat"
+                            [longitude]="point.coordinate.lng">
+        </agm-polyline-point>
+      </div>
+    </agm-polyline>
     <agm-polyline #polyline *ngFor="let roadsection of roadsections;trackBy: trackById"
                   [strokeColor]="roadsection.selected?'#00FFFF':'#FF0000'"
                   [strokeWeight]="(roadsection == selectedRoadsection)?'8':'4'"

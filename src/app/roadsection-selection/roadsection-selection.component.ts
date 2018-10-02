@@ -9,6 +9,13 @@ import {Topic} from '../models/topic.model';
 import {DatasetService} from '../dataset.service';
 import {DatasetQuery} from '../models/datasetQuery.model';
 import {Dataset} from '../models/dataset.model';
+import {Observable} from 'rxjs/Observable';
+import {Project} from '../models/project.model';
+import {Organisation} from '../models/organisation.model';
+import {Person} from '../models/person.model';
+import {InfraObject} from '../models/infraobject.model';
+import {Quantity} from '../models/quantity.model';
+import {CivilstructureModel} from '../models/civilstructure.model';
 
 @Component({
   selector: 'app-roadsection-selection',
@@ -21,6 +28,7 @@ export class RoadsectionSelectionComponent implements OnInit {
   map_lng = 4.392345417290926;
   fitBounds: google.maps.LatLngBounds;
   roadsections: Array<RoadsectionModel>;
+  civilstructures: Array<CivilstructureModel>;
   selectedRoadsection: RoadsectionModel;
   topics: Array<Topic>;
   drivewaySubtypes: Array<DrivewaySubtypeModel>;
@@ -30,6 +38,16 @@ export class RoadsectionSelectionComponent implements OnInit {
   topicSelection: TopicSelection;
   loading: string;
   queriedDatasets: Dataset[];
+  selectedDataset: Dataset;
+  projects: Array<Project>;
+  organisations: Array<Organisation>;
+  persons: Array<Person>;
+  // topics: Array<Topic>;
+  infraObjects: Array<InfraObject>;
+  quantities: Array<Quantity>;
+  decimalSymbols: string[];
+  separators: string[];
+  formats: string[];
 
   constructor(private _roadsectionService: RoadsectionService, private _datasetService: DatasetService) {
     console.log('RoadsectionSelectionComponent constructor');
@@ -51,9 +69,52 @@ export class RoadsectionSelectionComponent implements OnInit {
       this.calculateBounds(this.roadsections);
     });
 
+    this._roadsectionService.civilstructuresUpdated.subscribe((civilstructures) => {
+      console.log('Civilstructures updated!');
+      this.civilstructures = civilstructures;
+      // this.calculateBounds(this.roadsections);
+    });
+
     this._roadsectionService.getRoadNumbers().subscribe(value => this.roadNumbers = value);
     this._roadsectionService.getDrivewaySubtypes().subscribe(value => this.drivewaySubtypes = value);
     this._roadsectionService.loadingUpdated.subscribe(loading => this.loading = loading);
+
+    const projects$: Observable<Array<Project>> = this._datasetService.getProjects();
+    projects$.subscribe(value => {
+      this.projects = value;
+    });
+    const organisations$: Observable<Array<Organisation>> = this._datasetService.getOrganisations();
+    organisations$.subscribe(value => {
+      this.organisations = value;
+    });
+    const persons$: Observable<Array<Person>> = this._datasetService.getPersons();
+    persons$.subscribe(value => {
+      this.persons = value;
+    });
+    const topics$: Observable<Array<Topic>> = this._datasetService.getTopics();
+    topics$.subscribe(value => {
+      this.topics = value;
+    });
+    const infraObjects$: Observable<Array<InfraObject>> = this._datasetService.getInfraObjects();
+    infraObjects$.subscribe(value => {
+      this.infraObjects = value;
+    });
+    const quantities$: Observable<Array<Quantity>> = this._datasetService.getQuantities();
+    quantities$.subscribe(value => {
+      this.quantities = value;
+    });
+    const decimalSymbols$: Observable<Array<string>> = this._datasetService.getDecimalSymbols();
+    decimalSymbols$.subscribe(value => {
+      this.decimalSymbols = value;
+    });
+    const separators$: Observable<Array<string>> = this._datasetService.getSeparators();
+    separators$.subscribe(value => {
+      this.separators = value;
+    });
+    const formats$: Observable<Array<string>> = this._datasetService.getFormats();
+    formats$.subscribe(value => {
+      this.formats = value;
+    });
   }
 
   getRoad(): void {
@@ -62,6 +123,11 @@ export class RoadsectionSelectionComponent implements OnInit {
       ', beginKm: ' + this.roadsectionSelection.beginKm +
       ', endKm: ' + this.roadsectionSelection.beginKm +
       ', drivewaySubtype: ' + this.roadsectionSelection.drivewaySubtype);
+    this._roadsectionService.getCivilStructures(this.roadsectionSelection.road,
+      this.roadsectionSelection.active.road ? this.roadsectionSelection.road : undefined,
+      this.roadsectionSelection.active.direction ? this.roadsectionSelection.direction : undefined,
+      this.roadsectionSelection.active.beginKm ? this.roadsectionSelection.beginKm : undefined,
+      this.roadsectionSelection.active.endKm ? this.roadsectionSelection.endKm : undefined);
     this._roadsectionService.getRoadSections(
       this.roadsectionSelection.road,
       this.roadsectionSelection.active.road ? this.roadsectionSelection.road : undefined,
@@ -208,10 +274,12 @@ export class RoadsectionSelectionComponent implements OnInit {
         console.log(datasets[i].datasetLabel);
         this._showDataset(datasets[i]);
       }
+      this.selectedDataset = null;
     });
   }
 
   private _showDataset(dataset: Dataset): void {
+    this.selectedDataset = dataset;
     if (dataset.infraObjects && dataset.infraObjects.length > 0) {
       const infraObject = dataset.infraObjects[0];
       if (infraObject.start > infraObject.end) {

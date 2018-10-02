@@ -21,3 +21,7 @@ agm-map {
 .table-record {
   cursor: pointer;
 }
+
+.table-record-selected {
+  background-color: lightpink;
+}
