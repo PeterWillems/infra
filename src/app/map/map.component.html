@@ -9,7 +9,7 @@
       <agm-info-window #infoWindowCS [latitude]="civilstructure_infowindow_lat"
                        [longitude]="civilstructure_infowindow_lng"
                        [isOpen]="civilstructure === selectedCivilstructure">
-        {{civilstructure.inventOms}} [{{civilstructure.omschr}}]
+        {{civilstructure.inventOms}}<br><span style="font-size: x-small">{{civilstructure.omschr}} {{civilstructure.objectId}} ({{civilstructure.beginKm | number}}-{{civilstructure.eindKm | number}})</span>
       </agm-info-window>
       <div *ngIf="civilstructure.geometry">
         <agm-polyline-point *ngFor="let point of civilstructure.geometry.multiLineString"

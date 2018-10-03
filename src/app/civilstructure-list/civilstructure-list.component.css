@@ -1,0 +1,32 @@
+.component {
+  border: #aaa solid thin;
+  margin-top: 5px;
+  padding: 5px;
+  height: 240px;
+  overflow-y: auto;
+}
+
+.column-header {
+  font-size: small;
+  cursor: pointer;
+}
+
+.table-record {
+  cursor: pointer;
+}
+.table-record-selected{
+  background-color: lightpink;
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 10px solid black;
+  display: inline-block;
+}
+
+.td-field {
+  font-size: smaller;
+}

@@ -136,8 +136,12 @@
               <br>
               <app-roadsection-list [roadsections]="roadsections" [selectedRoadsection]="selectedRoadsection"
                                     (selectedRoadsectionChanged)="onSelectedRoadsectionChange($event)"
-                                    (zoomInChanged)="onZoomInChange($event)">
+                                    (zoomInChanged)="onRoadsectionZoomInChange($event)">
               </app-roadsection-list>
+              <app-civilstructure-list [civilstructures]="civilstructures"
+                                       [selectedCivilstructure]="selectedCivilstructure"
+                                       (selectedCivilstructureChanged)="onSelectedCivilstructureChange($event)"
+                                       (zoomInChanged)="onCivilstructureZoomInChange($event)"></app-civilstructure-list>
             </div>
           </div>
         </div>
@@ -235,7 +239,9 @@
       <app-map [map_lat]="map_lat" [map_lng]="map_lng" [maptype]="maptype" [roadsections]="roadsections"
                [civilstructures]="civilstructures"
                [fitBounds]="fitBounds" [selectedRoadsection]="selectedRoadsection"
+               [selectedCivilstructure]="selectedCivilstructure"
                (selectedRoadsectionChanged)="onSelectedRoadsectionChange($event)"
+               (selectedCivilstructureChanged)="onSelectedCivilstructureChange($event)"
                (selectedRoadsectionToggled)="onSelectedRoadsectionToggled($event)"></app-map>
     </div>
   </div>

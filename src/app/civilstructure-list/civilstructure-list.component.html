@@ -1,0 +1,49 @@
+<div class="card border-primary">
+  <div class="card-header">
+    selected civil structures (nl: geselecteerde kunstwerken)
+  </div>
+  <div class="card-body">
+    <div *ngIf="civilstructures" class="component">
+      <table class="table table-hover table-bordered table-sm">
+        <thead class="thead-light">
+        <tr>
+          <th></th>
+          <th class="column-header" (click)="sortData('id')">civil structure ID
+            <div [ngClass]="getSortClass('id')"></div>
+          </th>
+          <th class="column-header" (click)="sortData('label')">label
+            <div [ngClass]="getSortClass('label')"></div>
+          </th>
+          <th class="column-header" (click)="sortData('beginKilometer')">start KM
+            <div [ngClass]="getSortClass('beginKilometer')"></div>
+          </th>
+          <th class="column-header" (click)="sortData('endKilometer')">end KM
+            <div [ngClass]="getSortClass('endKilometer')"></div>
+          </th>
+          <th class="column-header" (click)="sortData('omschr')">type
+            <div [ngClass]="getSortClass('omschr')"></div>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="table-record {{civilstructure==selectedCivilstructure?'table-record-selected':''}}"
+            *ngFor="let civilstructure of civilstructures" id="{{civilstructure.objectId}}" (click)="show(civilstructure)"
+            (dblclick)="zoomIn(civilstructure)">
+          <td><input type="checkbox" [(ngModel)]="civilstructure.selected"></td>
+          <td class="td-field">{{civilstructure.objectId}}</td>
+          <td class="td-field">{{civilstructure.inventOms}}</td>
+          <td class="td-field">{{civilstructure.beginKm | number : '1.3-3'}}</td>
+          <td class="td-field">{{civilstructure.eindKm | number : '1.3-3'}}</td>
+          <td class="td-field">{{civilstructure.omschr}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="civilstructures">
+      <button class="btn btn-light" (click)="selectAll()">Select all</button>
+      <button class="btn btn-light" (click)="deselectAll()">Deselect all</button>
+    </div>
+    <br>
+    <!--<app-selected-roadsection [selectedCivilstructure]="selectedCivilstructure"></app-selected-roadsection>-->
+  </div>
+</div>

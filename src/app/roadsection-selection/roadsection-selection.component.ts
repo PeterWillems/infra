@@ -30,6 +30,7 @@ export class RoadsectionSelectionComponent implements OnInit {
   roadsections: Array<RoadsectionModel>;
   civilstructures: Array<CivilstructureModel>;
   selectedRoadsection: RoadsectionModel;
+  selectedCivilstructure: CivilstructureModel;
   topics: Array<Topic>;
   drivewaySubtypes: Array<DrivewaySubtypeModel>;
   roadNumbers: string[];
@@ -66,13 +67,13 @@ export class RoadsectionSelectionComponent implements OnInit {
     this._roadsectionService.roadsectionsUpdated.subscribe((roadsections) => {
       console.log('Roadsections updated!');
       this.roadsections = roadsections;
-      this.calculateBounds(this.roadsections);
+      this.calculateRoadsectionsBounds(this.roadsections);
     });
 
     this._roadsectionService.civilstructuresUpdated.subscribe((civilstructures) => {
       console.log('Civilstructures updated!');
       this.civilstructures = civilstructures;
-      // this.calculateBounds(this.roadsections);
+      this.calculateCivilstructuresBounds(this.civilstructures);
     });
 
     this._roadsectionService.getRoadNumbers().subscribe(value => this.roadNumbers = value);
@@ -175,20 +176,63 @@ export class RoadsectionSelectionComponent implements OnInit {
     this.selectedRoadsection = roadsection;
   }
 
+  onSelectedCivilstructureChange(civilstructure: CivilstructureModel): void {
+    console.log('onSelectedCivilstructureChange: ' + civilstructure.objectId);
+    this.selectedCivilstructure = civilstructure;
+  }
+
   onSelectedRoadsectionToggled(roadsection: RoadsectionModel): void {
     this.selectedRoadsection.selected = !this.selectedRoadsection.selected;
   }
 
-  onZoomInChange(roadsection: RoadsectionModel): void {
+  onRoadsectionZoomInChange(roadsection: RoadsectionModel): void {
     const roadsections = [roadsection];
-    this.calculateBounds(roadsections);
+    this.calculateRoadsectionsBounds(roadsections);
   }
 
-  private calculateBounds(roadsections: RoadsectionModel[]) {
+  onCivilstructureZoomInChange(civilstructure: CivilstructureModel): void {
+    const civilstructures = [civilstructure];
+    this.calculateCivilstructuresBounds(civilstructures);
+  }
+
+  private calculateRoadsectionsBounds(roadsections: RoadsectionModel[]) {
     const minLatLng = {lat: 90.0, lng: 180.0};
     const maxLatLng = {lat: 0.0, lng: 0.0};
     for (let i = 0; i < roadsections.length; i++) {
       const roadsection = roadsections[i];
+      if (roadsection.geometry !== undefined) {
+        const polylines = roadsection.geometry.multiLineString;
+        for (let j = 0; j < polylines.length; j++) {
+          const polyline = polylines[j];
+          const lat = polyline.coordinate.lat;
+          const lng = polyline.coordinate.lng;
+          if (lat > maxLatLng.lat) {
+            maxLatLng.lat = lat;
+          }
+          if (lat < minLatLng.lat) {
+            minLatLng.lat = lat;
+          }
+          if (lng > maxLatLng.lng) {
+            maxLatLng.lng = lng;
+          }
+          if (lng < minLatLng.lng) {
+            minLatLng.lng = lng;
+          }
+        }
+      }
+    }
+    this.fitBounds = null;
+    this.fitBounds = new google.maps.LatLngBounds();
+    this.fitBounds.extend(minLatLng);
+    this.fitBounds.extend(maxLatLng);
+    console.log('fitBounds: ' + this.fitBounds.toString());
+  }
+
+  private calculateCivilstructuresBounds(civilstructures: CivilstructureModel[]) {
+    const minLatLng = {lat: 90.0, lng: 180.0};
+    const maxLatLng = {lat: 0.0, lng: 0.0};
+    for (let i = 0; i < civilstructures.length; i++) {
+      const roadsection = civilstructures[i];
       if (roadsection.geometry !== undefined) {
         const polylines = roadsection.geometry.multiLineString;
         for (let j = 0; j < polylines.length; j++) {
@@ -266,7 +310,7 @@ export class RoadsectionSelectionComponent implements OnInit {
         console.log('iterations: ' + iterations + ' roadsections size: ' + this._roadsectionService.roadsections.length + ' tempRoadsections size: ' + tempRoadsections.length);
         if (iterations === 0) {
           this.roadsections = tempRoadsections;
-          this.calculateBounds(this.roadsections);
+          this.calculateRoadsectionsBounds(this.roadsections);
           subscription.unsubscribe();
         }
       });

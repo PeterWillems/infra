@@ -20,6 +20,7 @@ export class MapComponent implements OnInit, OnChanges {
   @Input() selectedRoadsection: RoadsectionModel;
   @Input() selectedCivilstructure: CivilstructureModel;
   @Output() selectedRoadsectionChanged: EventEmitter<RoadsectionModel> = new EventEmitter<RoadsectionModel>();
+  @Output() selectedCivilstructureChanged: EventEmitter<CivilstructureModel> = new EventEmitter<CivilstructureModel>();
   @Output() selectedDatasetChanged: EventEmitter<string> = new EventEmitter<string>();
   @Output() selectedRoadsectionToggled: EventEmitter<RoadsectionModel> = new EventEmitter<RoadsectionModel>();
   @Output() showOverview: EventEmitter<string> = new EventEmitter<string>();
@@ -71,6 +72,7 @@ export class MapComponent implements OnInit, OnChanges {
       this.civilstructure_infowindow_lat = latLng.lat();
       this.selectedCivilstructure = civilstructure;
       infoWindow.open();
+      this.selectedCivilstructureChanged.emit(this.selectedCivilstructure);
     }
   }
 
@@ -98,6 +100,20 @@ export class MapComponent implements OnInit, OnChanges {
           .geometry.multiLineString[Math.floor(lineSize / 2)].coordinate;
         this.roadsection_infowindow_lng = coord.lng;
         this.roadsection_infowindow_lat = coord.lat;
+      }
+    }
+    const selectedCivilstructureChange: SimpleChange = changes.selectedCivilstructure;
+    if (selectedCivilstructureChange !== undefined && selectedCivilstructureChange.currentValue !== undefined) {
+      console.log('selectedCivilstructureChange');
+      if (!this.mouseOverEvent) {
+        const lineSize = (<CivilstructureModel>selectedCivilstructureChange.currentValue).geometry.multiLineString.length;
+        console.log('selectedCivilstructureChange lineSize=' + lineSize);
+        const coord = (<CivilstructureModel>selectedCivilstructureChange.currentValue)
+          .geometry.multiLineString[Math.floor(lineSize / 2)].coordinate;
+        this.civilstructure_infowindow_lng = coord.lng;
+        this.civilstructure_infowindow_lat = coord.lat;
+        console.log('selectedCivilstructureChange coord.lng=' + coord.lng);
+        console.log('selectedCivilstructureChange coord.lat=' + coord.lat);
       }
     }
     this.mouseOverEvent = false;

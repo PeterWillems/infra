@@ -16,4 +16,5 @@ export interface CivilstructureModel {
   omschr: string;
   wegnummer: string;
   geometry: GeometryModel;
+  selected: boolean;
 }
