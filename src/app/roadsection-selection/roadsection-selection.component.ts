@@ -71,7 +71,7 @@ export class RoadsectionSelectionComponent implements OnInit {
     });
 
     this._roadsectionService.civilstructuresUpdated.subscribe((civilstructures) => {
-      console.log('Civilstructures updated!');
+      console.log('Civilstructures updated! ' + civilstructures.length);
       this.civilstructures = civilstructures;
       this.calculateCivilstructuresBounds(this.civilstructures);
     });
@@ -184,6 +184,11 @@ export class RoadsectionSelectionComponent implements OnInit {
   onSelectedRoadsectionToggled(roadsection: RoadsectionModel): void {
     this.selectedRoadsection.selected = !this.selectedRoadsection.selected;
   }
+
+  onSelectedCivilstructureToggled(civilstructure: CivilstructureModel): void {
+    this.selectedCivilstructure.selected = !this.selectedCivilstructure.selected;
+  }
+
 
   onRoadsectionZoomInChange(roadsection: RoadsectionModel): void {
     const roadsections = [roadsection];
@@ -301,19 +306,32 @@ export class RoadsectionSelectionComponent implements OnInit {
     }
     this._datasetService.queryDatasets(datasetQuery).subscribe(datasets => {
       this.queriedDatasets = datasets;
-      console.log('Select Datatsets: ' + datasets.length);
+      console.log('Select Datasets: ' + datasets.length);
       let tempRoadsections = <RoadsectionModel[]>[];
-      let iterations = datasets.length;
-      const subscription = this._roadsectionService.roadsectionsUpdated.subscribe(() => {
+      let iterations1 = datasets.length;
+      const subscription1 = this._roadsectionService.roadsectionsUpdated.subscribe(() => {
         tempRoadsections = tempRoadsections.concat(this._roadsectionService.roadsections);
-        iterations--;
-        console.log('iterations: ' + iterations + ' roadsections size: ' + this._roadsectionService.roadsections.length + ' tempRoadsections size: ' + tempRoadsections.length);
-        if (iterations === 0) {
+        iterations1--;
+        console.log('iterations1: ' + iterations1 + ' roadsections size: ' + this._roadsectionService.roadsections.length + ' tempRoadsections size: ' + tempRoadsections.length);
+        if (iterations1 === 0) {
           this.roadsections = tempRoadsections;
           this.calculateRoadsectionsBounds(this.roadsections);
-          subscription.unsubscribe();
+          subscription1.unsubscribe();
         }
       });
+      let tempCivilstructures = <CivilstructureModel[]>[];
+      let iterations2 = datasets.length;
+      const subscription2 = this._roadsectionService.civilstructuresUpdated.subscribe(() => {
+        tempCivilstructures = tempCivilstructures.concat(this._roadsectionService.civilstructures);
+        iterations2--;
+        console.log('iterations2: ' + iterations2 + ' roadsections size: ' + this._roadsectionService.roadsections.length + ' tempRoadsections size: ' + tempRoadsections.length);
+        if (iterations2 === 0) {
+          this.civilstructures = tempCivilstructures;
+          this.calculateCivilstructuresBounds(this.civilstructures);
+          subscription2.unsubscribe();
+        }
+      });
+
       for (let i = 0; i < datasets.length; i++) {
         console.log(datasets[i].datasetLabel);
         this._showDataset(datasets[i]);

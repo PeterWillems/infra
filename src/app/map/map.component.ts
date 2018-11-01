@@ -19,10 +19,12 @@ export class MapComponent implements OnInit, OnChanges {
   @Input() civilstructures: Array<CivilstructureModel>;
   @Input() selectedRoadsection: RoadsectionModel;
   @Input() selectedCivilstructure: CivilstructureModel;
+  @Input() topic: string;
   @Output() selectedRoadsectionChanged: EventEmitter<RoadsectionModel> = new EventEmitter<RoadsectionModel>();
   @Output() selectedCivilstructureChanged: EventEmitter<CivilstructureModel> = new EventEmitter<CivilstructureModel>();
   @Output() selectedDatasetChanged: EventEmitter<string> = new EventEmitter<string>();
   @Output() selectedRoadsectionToggled: EventEmitter<RoadsectionModel> = new EventEmitter<RoadsectionModel>();
+  @Output() selectedCivilstructureToggled: EventEmitter<CivilstructureModel> = new EventEmitter<CivilstructureModel>();
   @Output() showOverview: EventEmitter<string> = new EventEmitter<string>();
   private _datasetLabel: string;
 
@@ -91,6 +93,14 @@ export class MapComponent implements OnInit, OnChanges {
     }
   }
 
+  lineClick2(civilstructure: CivilstructureModel, dblClick: boolean): void {
+    console.log('lineClick ' + civilstructure.datasetLabel + ' dblClick: ' + dblClick);
+    this.selectedDatasetChanged.emit(civilstructure.datasetLabel);
+    if (dblClick) {
+      this.selectedCivilstructureToggled.emit(this.selectedCivilstructure);
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     const selectedRoadsectionChange: SimpleChange = changes.selectedRoadsection;
     if (selectedRoadsectionChange !== undefined && selectedRoadsectionChange.currentValue !== undefined) {
@@ -129,29 +139,23 @@ export class MapComponent implements OnInit, OnChanges {
         }
       }
     }
+    const civilstructureChanges = changes['civilstructures'];
+    if (civilstructureChanges && this.civilstructures) {
+      const datasetLabels = [];
+      for (let i = 0; i < this.civilstructures.length; i++) {
+        if (!datasetLabels.includes(this.civilstructures[i].datasetLabel)) {
+          this.civilstructures[i].hasLabel = true;
+          datasetLabels.push(this.civilstructures[i].datasetLabel);
+        } else {
+          this.civilstructures[i].hasLabel = false;
+        }
+      }
+    }
   }
 
-  isNextDatasetLabel(roadsection: RoadsectionModel): boolean {
-    //   if (this._datasetLabels.get(roadsection.datasetLabel)) {
-    //     return false;
-    //   } else {
-    //     this._datasetLabels.set(roadsection.datasetLabel, true);
-    //     return true;
-    //   }
-    //
-    //
-    //   // if (!this._datasetLabel) {
-    //   //   this._datasetLabel = roadsection.datasetLabel;
-    //   //   return true;
-    //   // }
-    //   // if (roadsection.datasetLabel === this._datasetLabel) {
-    //   //   return false;
-    //   // } else {
-    //   //   this._datasetLabel = roadsection.datasetLabel;
-    //   //   return true;
-    //   // }
-    return roadsection.hasLabel;
-  }
+  // isNextDatasetLabel(roadsection: RoadsectionModel): boolean {
+  //   return roadsection.hasLabel;
+  // }
 
   onShowOverviewClicked(): void {
     this.showOverview.emit();

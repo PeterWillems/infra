@@ -17,4 +17,6 @@ export interface CivilstructureModel {
   wegnummer: string;
   geometry: GeometryModel;
   selected: boolean;
+  datasetLabel: string;
+  hasLabel: boolean;
 }

@@ -4,13 +4,17 @@
     <!--<agm-info-window>Hello World!</agm-info-window>-->
     <!--</agm-marker>-->
     <agm-polyline *ngFor="let civilstructure of civilstructures"
-                  [strokeWeight]="10" [strokeColor]="'#777777'" [strokeOpacity]="0.75"
-                  (lineMouseOver)="lineMouseOverCS(civilstructure, infoWindowCS, $event)">
+                  [strokeWeight]="10" [strokeColor]="civilstructure.selected?'#0000FF':'#777777'" [strokeOpacity]="0.75"
+                  (lineMouseOver)="lineMouseOverCS(civilstructure, infoWindowCS, $event)"
+                  (lineClick)="lineClick2(civilstructure, false)" (lineDblClick)="lineClick2(civilstructure, true)">
       <agm-info-window #infoWindowCS [latitude]="civilstructure_infowindow_lat"
                        [longitude]="civilstructure_infowindow_lng"
                        [isOpen]="civilstructure === selectedCivilstructure">
         {{civilstructure.inventOms}}<br><span style="font-size: x-small">{{civilstructure.omschr}} {{civilstructure.objectId}} ({{civilstructure.beginKm | number}}-{{civilstructure.eindKm | number}})</span>
       </agm-info-window>
+      <agm-marker *ngIf="civilstructure.hasLabel && topic==='datasets'" [label]="civilstructure.datasetLabel"
+                  [latitude]="civilstructure.geometry.multiLineString[0].coordinate.lat"
+                  [longitude]="civilstructure.geometry.multiLineString[0].coordinate.lng"></agm-marker>
       <div *ngIf="civilstructure.geometry">
         <agm-polyline-point *ngFor="let point of civilstructure.geometry.multiLineString"
                             [latitude]="point.coordinate.lat"
@@ -29,7 +33,7 @@
                        (infoWindowClose)="onInfoWindowClose(roadsection)">
         {{roadsection.id}} {{roadsection.datasetLabel}}
       </agm-info-window>
-      <agm-marker *ngIf="isNextDatasetLabel(roadsection)" [label]="roadsection.datasetLabel"
+      <agm-marker *ngIf="roadsection.hasLabel" [label]="roadsection.datasetLabel"
                   (markerClick)="lineClick(roadsection, $event)"
                   [latitude]="roadsection.geometry.multiLineString[0].coordinate.lat"
                   [longitude]="roadsection.geometry.multiLineString[0].coordinate.lng"></agm-marker>

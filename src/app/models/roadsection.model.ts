@@ -23,7 +23,7 @@ export interface RoadsectionModel {
   roadNumber: string;
   streetName: string;
   strokeColor: string;
-  datasetLabel: string;
   selected: boolean;
+  datasetLabel: string;
   hasLabel: boolean;
 }

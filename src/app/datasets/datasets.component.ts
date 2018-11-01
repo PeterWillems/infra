@@ -11,6 +11,7 @@ import {Topic} from '../models/topic.model';
 import {Person} from '../models/person.model';
 import {Quantity} from '../models/quantity.model';
 import {InfraObject} from '../models/infraobject.model';
+import {CivilstructureModel} from '../models/civilstructure.model';
 
 @Component({
   selector: 'app-datasets',
@@ -36,6 +37,8 @@ export class DatasetsComponent implements OnInit {
   selectedDataset: Dataset;
   roadsections: Array<RoadsectionModel>;
   allRoadsections: Array<RoadsectionModel>;
+  civilstructures: Array<CivilstructureModel>;
+  allCivilstructures: Array<CivilstructureModel>;
   fitBounds: LatLngBounds;
 
   constructor(private _datasetService: DatasetService, private _roadsectionService: RoadsectionService) {
@@ -95,6 +98,7 @@ export class DatasetsComponent implements OnInit {
   }
 
   show(dataset: Dataset): void {
+    console.log('show dataset=' + dataset.datasetLabel);
     if (this.selectedDataset && dataset.datasetLabel === this.selectedDataset.datasetLabel) {
       this.selectedDataset = null;
       this._showAllDatasets();
@@ -103,8 +107,14 @@ export class DatasetsComponent implements OnInit {
         console.log('roadsectionsUpdated ' + next);
         this.overview = false;
         this.roadsections = this._roadsectionService.roadsections;
-        this.fitBounds = this._roadsectionService.calculateBounds(this.roadsections);
+        this.fitBounds = this._roadsectionService.calculateRoadsectionsBounds(this.roadsections);
         subscription.unsubscribe();
+      });
+      const subscription2 = this._roadsectionService.civilstructuresUpdated.subscribe(next => {
+        console.log('civilstructuresUpdated ' + next);
+        this.civilstructures = this._roadsectionService.civilstructures;
+        this.fitBounds = this._roadsectionService.calculateCivilstructuresBounds(this.civilstructures);
+        subscription2.unsubscribe();
       });
       this.selectedDataset = dataset;
       this._showDataset(dataset);
@@ -112,23 +122,31 @@ export class DatasetsComponent implements OnInit {
   }
 
   private _showDataset(dataset: Dataset): void {
+    console.log('_showDataset dataset=' + dataset.datasetLabel);
     if (dataset.infraObjects && dataset.infraObjects.length > 0) {
       const infraObject = dataset.infraObjects[0];
-      if (infraObject.start > infraObject.end) {
-        this._roadsectionService.getRoadSections(dataset.datasetLabel, infraObject.road.substring(1), infraObject.way.endsWith('R'),
-          infraObject.end, infraObject.start, 'HR');
+      if (infraObject.way) {
+        if (infraObject.start > infraObject.end) {
+          this._roadsectionService.getRoadSections(dataset.datasetLabel, infraObject.road.substring(1), infraObject.way.endsWith('R'),
+            infraObject.end, infraObject.start, 'HR');
+        } else {
+          this._roadsectionService.getRoadSections(dataset.datasetLabel, infraObject.road.substring(1), infraObject.way.endsWith('R'),
+            infraObject.start, infraObject.end, 'HR');
+        }
       } else {
-        this._roadsectionService.getRoadSections(dataset.datasetLabel, infraObject.road.substring(1), infraObject.way.endsWith('R'),
-          infraObject.start, infraObject.end, 'HR');
+        this._roadsectionService.getCivilStructure(dataset.datasetLabel, infraObject.uri);
       }
     }
   }
 
   private _showAllDatasets() {
+    console.log('_showAllDatasets');
     if (!this.allRoadsections) {
       let numberOfDatasets = this.datasets.length;
       console.log('_showAllDatasets/numberOfDatasets=' + numberOfDatasets);
-      const subscription = this._roadsectionService.roadsectionsUpdated.subscribe(next => {
+      let subscription1 = null;
+      let subscription2 = null;
+      subscription1 = this._roadsectionService.roadsectionsUpdated.subscribe(next => {
         const thisDataset = this.datasets[this.datasets.length - numberOfDatasets];
         console.log('_showAllDatasets ' + thisDataset.datasetLabel);
         // for (let index = 0; index < this._roadsectionService.roadsections.length; index++) {
@@ -142,19 +160,45 @@ export class DatasetsComponent implements OnInit {
         }
 
         if (numberOfDatasets === 0) {
-          subscription.unsubscribe();
-          this.fitBounds = this._roadsectionService.calculateBounds(this.allRoadsections);
+          subscription1.unsubscribe();
+          subscription2.unsubscribe();
+          this.fitBounds = this._roadsectionService.calculateRoadsectionsBounds(this.allRoadsections);
           this.overview = true;
           this.roadsections = this.allRoadsections;
+          this.civilstructures = this.allCivilstructures;
+        }
+      });
+      subscription2 = this._roadsectionService.civilstructuresUpdated.subscribe(next => {
+        const thisDataset = this.datasets[this.datasets.length - numberOfDatasets];
+        console.log('_showAllDatasets ' + thisDataset.datasetLabel);
+        // for (let index = 0; index < this._roadsectionService.roadsections.length; index++) {
+        //   this._roadsectionService.roadsections[index].datasetLabel = thisDataset.datasetLabel;
+        // }
+        numberOfDatasets--;
+
+        if (!this.allCivilstructures) {
+          this.allCivilstructures = this._roadsectionService.civilstructures;
+        } else {
+          this.allCivilstructures = this.allCivilstructures.concat(this._roadsectionService.civilstructures);
+        }
+
+        if (numberOfDatasets === 0) {
+          subscription1.unsubscribe();
+          subscription2.unsubscribe();
+          this.fitBounds = this._roadsectionService.calculateRoadsectionsBounds(this.allRoadsections);
+          this.overview = true;
+          this.roadsections = this.allRoadsections;
+          this.civilstructures = this.allCivilstructures;
         }
       });
       for (let index = 0; index < this.datasets.length; index++) {
         this._showDataset(this.datasets[index]);
       }
     } else {
-      this.fitBounds = this._roadsectionService.calculateBounds(this.allRoadsections);
+      this.fitBounds = this._roadsectionService.calculateRoadsectionsBounds(this.allRoadsections);
       this.overview = true;
       this.roadsections = this.allRoadsections;
+      this.civilstructures = this.allCivilstructures;
     }
   }
 
@@ -180,7 +224,6 @@ export class DatasetsComponent implements OnInit {
     this._datasetService.update(this.selectedDataset);
     this._datasetService.getDataset(this.selectedDataset).subscribe((value) => {
       this.selectedDataset = value;
-      console.log('years: ' + this.selectedDataset.measurementYears);
     });
   }
 

@@ -1,0 +1,75 @@
+<div *ngIf="selectedCivilstructure" class="component">
+  <div class="card border-primary">
+    <div class="card-header">
+      selected civil structure {{selectedCivilstructure.objectId}}
+    </div>
+    <div class="card-body">
+      <table class="table table-hover table-bordered table-condensed table-sm">
+        <thead class="thead-light">
+        <tr>
+          <th>attribute</th>
+          <th>value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>id</td>
+          <td>{{selectedCivilstructure.id}}</td>
+        </tr>
+        <tr>
+          <td>invent oms</td>
+          <td>{{selectedCivilstructure.inventOms}}</td>
+        </tr>
+        <tr>
+          <td>omschr</td>
+          <td>{{selectedCivilstructure.omschr}}</td>
+        </tr>
+        <tr>
+          <td>object ID</td>
+          <td>{{selectedCivilstructure.objectId}}</td>
+        </tr>
+        <tr>
+          <td>doorrijhgt</td>
+          <td>{{selectedCivilstructure.doorrijhgt}}</td>
+        </tr>
+        <tr>
+          <td>road</td>
+          <td>{{'R' + selectedCivilstructure.wegnummer}}</td>
+        </tr>
+        <tr>
+          <td>start KM</td>
+          <td>{{selectedCivilstructure.beginKm | number : '1.3-3' | kilometry}}</td>
+        </tr>
+        <tr>
+          <td>end KM</td>
+          <td>{{selectedCivilstructure.eindKm | number : '1.3-3' | kilometry}}</td>
+        </tr>
+        <tr>
+          <td>start road part letter</td>
+          <td>{{selectedCivilstructure.beginWdl}}</td>
+        </tr>
+        <tr>
+          <td>end road part letter</td>
+          <td>{{selectedCivilstructure.eindWdl}}</td>
+        </tr>
+        <tr>
+          <td>izi side</td>
+          <td>{{selectedCivilstructure.iziSide}}</td>
+        </tr>
+        <tr>
+          <td>kant code</td>
+          <td>{{selectedCivilstructure.kantCode}}</td>
+        </tr>
+        <tr>
+          <td>ibn</td>
+          <td>{{selectedCivilstructure.ibn}}</td>
+        </tr>
+        <tr>
+          <td>fk veld 4</td>
+          <td>{{selectedCivilstructure.fkVeld4}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

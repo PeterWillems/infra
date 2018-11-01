@@ -27,7 +27,8 @@
         </thead>
         <tbody>
         <tr class="table-record {{civilstructure==selectedCivilstructure?'table-record-selected':''}}"
-            *ngFor="let civilstructure of civilstructures" id="{{civilstructure.objectId}}" (click)="show(civilstructure)"
+            *ngFor="let civilstructure of civilstructures" id="{{civilstructure.objectId}}"
+            (click)="show(civilstructure)"
             (dblclick)="zoomIn(civilstructure)">
           <td><input type="checkbox" [(ngModel)]="civilstructure.selected"></td>
           <td class="td-field">{{civilstructure.objectId}}</td>
@@ -44,6 +45,6 @@
       <button class="btn btn-light" (click)="deselectAll()">Deselect all</button>
     </div>
     <br>
-    <!--<app-selected-roadsection [selectedCivilstructure]="selectedCivilstructure"></app-selected-roadsection>-->
+    <app-selected-civilstructure [selectedCivilstructure]="selectedCivilstructure"></app-selected-civilstructure>
   </div>
 </div>

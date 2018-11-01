@@ -12,7 +12,7 @@ import {CivilstructureModel} from './models/civilstructure.model';
 export class RoadsectionService {
   apiAddress: string;
   roadsections: Array<RoadsectionModel>;
-  civilstructures: Array<CivilstructureModel>
+  civilstructures: Array<CivilstructureModel>;
   roadsectionsGeometry: Array<GeometryModel> = [];
   roadsectionsUpdated = new EventEmitter();
   civilstructuresUpdated = new EventEmitter();
@@ -93,7 +93,7 @@ export class RoadsectionService {
     }
   }
 
-  calculateBounds(roadsections: RoadsectionModel[]): LatLngBounds {
+  calculateRoadsectionsBounds(roadsections: RoadsectionModel[]): LatLngBounds {
     const minLatLng = {lat: 90.0, lng: 180.0};
     const maxLatLng = {lat: 0.0, lng: 0.0};
     for (let i = 0; i < roadsections.length; i++) {
@@ -101,6 +101,40 @@ export class RoadsectionService {
       console.log('roadsection.id: ' + roadsection.id + ' roadsection.geometry: ' + roadsection.geometry);
       if (roadsection.geometry !== undefined) {
         const polylines = roadsection.geometry.multiLineString;
+        for (let j = 0; j < polylines.length; j++) {
+          const polyline = polylines[j];
+          const lat = polyline.coordinate.lat;
+          const lng = polyline.coordinate.lng;
+          if (lat > maxLatLng.lat) {
+            maxLatLng.lat = lat;
+          }
+          if (lat < minLatLng.lat) {
+            minLatLng.lat = lat;
+          }
+          if (lng > maxLatLng.lng) {
+            maxLatLng.lng = lng;
+          }
+          if (lng < minLatLng.lng) {
+            minLatLng.lng = lng;
+          }
+        }
+      }
+    }
+    const fitBounds = new google.maps.LatLngBounds();
+    fitBounds.extend(minLatLng);
+    fitBounds.extend(maxLatLng);
+    console.log('fitBounds: ' + fitBounds.toString());
+    return fitBounds;
+  }
+
+  calculateCivilstructuresBounds(civilstructures: CivilstructureModel[]): LatLngBounds {
+    const minLatLng = {lat: 90.0, lng: 180.0};
+    const maxLatLng = {lat: 0.0, lng: 0.0};
+    for (let i = 0; i < civilstructures.length; i++) {
+      const civilstructure = civilstructures[i];
+      console.log('civilstructure.id: ' + civilstructure.id + ' civilstructure.geometry: ' + civilstructure.geometry);
+      if (civilstructure.geometry !== undefined) {
+        const polylines = civilstructure.geometry.multiLineString;
         for (let j = 0; j < polylines.length; j++) {
           const polyline = polylines[j];
           const lat = polyline.coordinate.lat;
@@ -157,12 +191,38 @@ export class RoadsectionService {
     const civilstructures$ =
       this._httpClient.get<Array<CivilstructureModel>>(request);
     civilstructures$.subscribe(value => {
-      civilstructures = value
+      civilstructures = value;
+      for (let index = 0; index < civilstructures.length; index++) {
+        civilstructures[index].datasetLabel = datasetLabel;
+      }
     }, error2 => {
       console.log(error2);
       this.loading = 'On error: ' + error2;
       this.loadingUpdated.emit(this.loading);
     }, () => {
+      this.civilstructures = civilstructures;
+      this.civilstructuresUpdated.emit(civilstructures);
+      console.log('Ready');
+      this.loading = 'Ready';
+      this.loadingUpdated.emit(this.loading);
+    });
+  }
+
+  getCivilStructure(datasetLabel: string, uri: string): void {
+    console.log('Loading ...' + datasetLabel);
+    this.loading = 'Loading ...';
+    this.loadingUpdated.emit(this.loading);
+
+    const civilstructures: Array<CivilstructureModel> = [];
+    const fragment = uri.substring(uri.indexOf('#') + 1);
+    const request = this.apiAddress + '/civilstructures/' + fragment + '/';
+    console.log('request: ' + request);
+    const civilstructure$ =
+      this._httpClient.get<CivilstructureModel>(request);
+    civilstructure$.subscribe(value => {
+      value.datasetLabel = datasetLabel;
+      civilstructures.push(value);
+    }, null, () => {
       this.civilstructures = civilstructures;
       this.civilstructuresUpdated.emit(civilstructures);
       console.log('Ready');

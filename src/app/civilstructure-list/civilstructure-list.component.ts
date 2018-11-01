@@ -78,4 +78,15 @@ export class CivilstructureListComponent implements OnInit, OnChanges {
     this.showClicked = false;
   }
 
+  selectAll(): void {
+    for (let i = 0; i < this.civilstructures.length; i++) {
+      this.civilstructures[i].selected = true;
+    }
+  }
+
+  deselectAll(): void {
+    for (let i = 0; i < this.civilstructures.length; i++) {
+      this.civilstructures[i].selected = false;
+    }
+  }
 }

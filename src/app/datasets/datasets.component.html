@@ -22,11 +22,19 @@
               <tr class="table-record {{dataset == selectedDataset ? 'table-record-selected' : ''}}"
                   *ngFor="let infraObject of dataset.infraObjects;let i = index" (click)="show(dataset)">
                 <td *ngIf="i == 0" [attr.rowspan]="dataset.infraObjects.length">{{dataset.datasetLabel}}</td>
-                <td>{{infraObject.road}}</td>
-                <td>{{infraObject.way}}</td>
-                <td>{{infraObject.lane}}</td>
-                <td align="right">{{infraObject.start | number : '1.1-1'}}</td>
-                <td align="right">{{infraObject.end | number : '1.1-1'}}</td>
+                <ng-container *ngIf="infraObject.way">
+                  <td>{{infraObject.road}}</td>
+                  <td>{{infraObject.way}}</td>
+                  <td>{{infraObject.lane}}</td>
+                  <td align="right">{{infraObject.start | number : '1.1-1'}}</td>
+                  <td align="right">{{infraObject.end | number : '1.1-1'}}</td>
+                </ng-container>
+                <ng-container *ngIf="!infraObject.way">
+                  <td>{{infraObject.road}}</td>
+                  <td colspan="2" style="font-size: small">{{infraObject.label}}</td>
+                  <td align="right">{{infraObject.start | number : '1.1-1'}}</td>
+                  <td align="right">{{infraObject.end | number : '1.1-1'}}</td>
+                </ng-container>
               </tr>
               <tr *ngIf="dataset.infraObjects.length===0" (click)="show(dataset)">
                 <td>{{dataset.datasetLabel}}</td>
@@ -55,8 +63,8 @@
       </div>
     </div>
     <div class="col-md-8 column-content">
-      <app-map [map_lat]="map_lat" [map_lng]="map_lng" [maptype]="maptype" [overview]="overview"
-               [roadsections]="roadsections" [fitBounds]="fitBounds"
+      <app-map [map_lat]="map_lat" [map_lng]="map_lng" [maptype]="maptype" [overview]="overview" [topic]="'datasets'"
+               [roadsections]="roadsections" [fitBounds]="fitBounds" [civilstructures]="civilstructures"
                (selectedDatasetChanged)="onSelectedDatasetChange($event)"
                (showOverview)="onShowOverviewClicked()"></app-map>
     </div>

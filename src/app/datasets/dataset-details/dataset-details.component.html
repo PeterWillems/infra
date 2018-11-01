@@ -207,7 +207,9 @@
       </tr>
       <tr [ngClass]="isSelected('infraobjects')?'selected':''">
         <td>infraobjects</td>
-        <td *ngIf="!isSelected('infraobjects')">{{showInfraobjects(selectedDataset.infraObjects)}}</td>
+        <td *ngIf="!isSelected('infraobjects')" style="font-size: small">
+          {{showInfraobjects(selectedDataset.infraObjects)}}
+        </td>
         <td *ngIf="isSelected('infraobjects')">
           <table>
             <tr>
@@ -219,11 +221,24 @@
             </tr>
             <ng-container *ngFor="let infraObject of selectedDataset.infraObjects">
               <tr *ngIf="!inEditMode(infraObject)">
-                <td>{{infraObject.road}}</td>
-                <td>{{infraObject.way}}</td>
-                <td>{{infraObject.lane}}</td>
-                <td>{{infraObject.start}}</td>
-                <td>{{infraObject.end}}</td>
+                <ng-container *ngIf="infraObject.way">
+                  <td>{{infraObject.road}}</td>
+                  <td>{{infraObject.way}}</td>
+                  <td>{{infraObject.lane}}</td>
+                  <td align="right">{{infraObject.start | number : '1.1-1'}}</td>
+                  <td align="right">{{infraObject.end | number : '1.1-1'}}</td>
+                </ng-container>
+                <ng-container *ngIf="!infraObject.way">
+                  <td>{{infraObject.road}}</td>
+                  <td colspan="2" style="font-size: small">{{infraObject.label}}</td>
+                  <td align="right">{{infraObject.start | number : '1.1-1'}}</td>
+                  <td align="right">{{infraObject.end | number : '1.1-1'}}</td>
+                </ng-container>
+                <!--<td>{{infraObject.road}}</td>-->
+                <!--<td>{{infraObject.way}}</td>-->
+                <!--<td>{{infraObject.lane}}</td>-->
+                <!--<td>{{infraObject.start | number : '1.1-1'}}</td>-->
+                <!--<td>{{infraObject.end | number : '1.1-1'}}</td>-->
                 <td>
                   <button class="btn btn-default btn-sm fa fa-trash" (click)="removeInfraobject(infraObject)"></button>
                 </td>
@@ -241,13 +256,22 @@
                       <td><label>road</label><input class="form-control" type="text" [(ngModel)]="infraObject.road">
                       </td>
                     </tr>
-                    <tr>
-                      <td><label>way</label><input class="form-control" type="text" [(ngModel)]="infraObject.way"></td>
-                    </tr>
-                    <tr>
-                      <td><label>lane</label><input class="form-control" type="text" [(ngModel)]="infraObject.lane">
-                      </td>
-                    </tr>
+                    <ng-container *ngIf="infraObject.way">
+                      <tr>
+                        <td><label>way</label><input class="form-control" type="text" [(ngModel)]="infraObject.way">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><label>lane</label><input class="form-control" type="text" [(ngModel)]="infraObject.lane">
+                        </td>
+                      </tr>
+                    </ng-container>
+                    <ng-container *ngIf="!infraObject.way">
+                      <tr>
+                        <td><label>way/lane</label><input class="form-control" type="text" [(ngModel)]="infraObject.label">
+                        </td>
+                      </tr>
+                    </ng-container>
                     <tr>
                       <td><label>start</label><input class="form-control" type="number" [(ngModel)]="infraObject.start">
                       </td>

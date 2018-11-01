@@ -21,6 +21,7 @@ import {DatasetsComponent} from './datasets/datasets.component';
 import {DatasetDetailsComponent} from './datasets/dataset-details/dataset-details.component';
 import {DatasetService} from './dataset.service';
 import { CivilstructureListComponent } from './civilstructure-list/civilstructure-list.component';
+import { SelectedCivilstructureComponent } from './civilstructure-list/selected-civilstructure/selected-civilstructure.component';
 
 const appRoutes: Routes = [
   {path: 'selection', component: RoadsectionSelectionComponent},
@@ -43,7 +44,8 @@ const appRoutes: Routes = [
     JunctionPipe,
     DatasetsComponent,
     DatasetDetailsComponent,
-    CivilstructureListComponent
+    CivilstructureListComponent,
+    SelectedCivilstructureComponent
   ],
   imports: [
     BrowserModule,
