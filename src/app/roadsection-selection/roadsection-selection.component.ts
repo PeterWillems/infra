@@ -341,15 +341,20 @@ export class RoadsectionSelectionComponent implements OnInit {
   }
 
   private _showDataset(dataset: Dataset): void {
+    console.log('_showDataset dataset=' + dataset.datasetLabel);
     this.selectedDataset = dataset;
     if (dataset.infraObjects && dataset.infraObjects.length > 0) {
       const infraObject = dataset.infraObjects[0];
-      if (infraObject.start > infraObject.end) {
-        this._roadsectionService.getRoadSections(dataset.datasetLabel, infraObject.road.substring(1), infraObject.way.endsWith('R'),
-          infraObject.end, infraObject.start, 'HR');
+      if (infraObject.way) {
+        if (infraObject.start > infraObject.end) {
+          this._roadsectionService.getRoadSections(dataset.datasetLabel, infraObject.road.substring(1), infraObject.way.endsWith('R'),
+            infraObject.end, infraObject.start, 'HR');
+        } else {
+          this._roadsectionService.getRoadSections(dataset.datasetLabel, infraObject.road.substring(1), infraObject.way.endsWith('R'),
+            infraObject.start, infraObject.end, 'HR');
+        }
       } else {
-        this._roadsectionService.getRoadSections(dataset.datasetLabel, infraObject.road.substring(1), infraObject.way.endsWith('R'),
-          infraObject.start, infraObject.end, 'HR');
+        this._roadsectionService.getCivilStructure(dataset.datasetLabel, infraObject.uri);
       }
     }
   }
